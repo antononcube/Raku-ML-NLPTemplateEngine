@@ -1,0 +1,42 @@
+{
+  "name": "ML::NLPTemplateEngine",
+  "description": "ML::NLPTemplateEngine provides function(s) for making computational workflows.",
+  "version": "0.1.2",
+  "perl": "6.*",
+  "authors": [
+    "Anton Antonov"
+  ],
+  "auth": "zef:antononcube",
+  "depends": [
+    "ML::FindTextualAnswer:ver<0.1.1>"
+  ],
+  "build-depends": [],
+  "test-depends": [],
+  "provides": {
+    "ML::NLPTemplateEngine": "lib/ML/NLPTemplateEngine.rakumod",
+    "ML::NLPTemplateEngine::Core": "lib/ML/NLPTemplateEngine/Core.rakumod",
+    "ML::NLPTemplateEngine::Ingestion": "lib/ML/NLPTemplateEngine/Ingestion.rakumod"
+  },
+  "resources": [],
+  "license": "Artistic-2.0",
+  "tags": [
+    "ai",
+    "api",
+    "art",
+    "chat-gpt",
+    "chatgpt",
+    "generative art",
+    "generative",
+    "machine learning",
+    "ml",
+    "openai",
+    "palm",
+    "qas",
+    "question answering",
+    "question answering system",
+    "web service",
+    "web"
+  ],
+  "api": "1",
+  "source-url": "https://github.com/antononcube/Raku-ML-NLPTemplateEngine"
+}
