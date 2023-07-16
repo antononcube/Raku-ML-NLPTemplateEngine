@@ -37,7 +37,7 @@ sub get-specs(Str $type = 'standard') is export {
 our proto Concretize($sf, $command, *%args) is export {*}
 
 multi sub Concretize(Whatever, $command, *%args) {
-    # Apply a classifier to the workflow
+
 }
 
 multi sub Concretize(Str $sf,
@@ -45,7 +45,8 @@ multi sub Concretize(Str $sf,
                      Str :$lang = 'WL',
                      Bool :$avoid-monads = False,
                      :$format is copy = 'hash',
-                     :$user-id = ''
+                     :$user-id = '',
+                     *%args
                      ) {
 
 
@@ -76,7 +77,8 @@ multi sub Concretize(Str $sf,
     # Find answers
     #------------------------------------------------------
 
-    my $ans = find-textual-answer($command, @questions2, llm => 'palm', max-tokens => 400, temperature => 0.5):!echo:pairs;
+    my %args2 = %args.grep({ $_.key ∉ <pairs p> });
+    my $ans = find-textual-answer($command, @questions2, |%args2):pairs;
 
     my $tmpl = get-specs<Templates>{$sf}{$lang};
 
