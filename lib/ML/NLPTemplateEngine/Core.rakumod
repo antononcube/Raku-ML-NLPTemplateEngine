@@ -33,8 +33,10 @@ my %workflowSpecToFullName =
         Classification => 'Classification',
         ClCon => 'Classification',
         LatentSemanticAnalysis => 'Latent Semantic Analysis',
-        LSAMon => 'Latent Semantic Analysis',
+        #LSAMon => 'Latent Semantic Analysis',
         QuantileRegression => 'Quantile Regression',
+        Recommendations => 'Recommendations',
+        #SMRMon => 'Recommendations',
         QRMon => 'Quantile Regression',
         RandomTabularDataset => 'RandomTabularDataset',
         ProgrammingEnvironment => 'ProgrammingEnvironment';
@@ -50,7 +52,9 @@ our proto Concretize($sf, $command, *%args) is export {*}
 multi sub Concretize(Whatever, $command, *%args) {
 
     my @lbls = %workflowSpecToFullName.values.unique;
-    my $sf = llm-classify($command, @lbls, |%args);
+
+    my %args2 = {request => 'which of these workflows characterizes it'} , %args;
+    my $sf = llm-classify($command, @lbls, |%args2);
 
     if %args<echo> // False {
         note "Workflow classification result: $sf";
@@ -120,6 +124,10 @@ multi sub Concretize(Str $sf,
     my $tmpl2 = $tmpl.values.head.head<Value>;
 
     #------------------------------------------------------
+    # Remove residual words
+    #------------------------------------------------------
+
+    #------------------------------------------------------
     # Process template
     #------------------------------------------------------
 
@@ -131,6 +139,7 @@ multi sub Concretize(Str $sf,
 
         for %questionToParam.kv -> $k, $v {
             $tmplFilledIn .= subst( /  ',' \h* 'TemplateSlot["' $v '"]' \h* ',' \h* /, %answers{$k ~ '?'}):g;
+            $tmplFilledIn .= subst( / '$*' $v /, %answers{$k ~ '?'}):g;
         }
 
         $tmplFilledIn .= subst(/ ^ 'TemplateObject[{"'/, '');
