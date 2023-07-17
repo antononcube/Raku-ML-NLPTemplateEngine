@@ -1,14 +1,14 @@
 {
   "name": "ML::NLPTemplateEngine",
   "description": "ML::NLPTemplateEngine provides function(s) for making computational workflows.",
-  "version": "0.1.2",
+  "version": "0.1.0",
   "perl": "6.*",
   "authors": [
     "Anton Antonov"
   ],
   "auth": "zef:antononcube",
   "depends": [
-    "ML::FindTextualAnswer:ver<0.1.1>"
+    "ML::FindTextualAnswer:ver<0.1.2>"
   ],
   "build-depends": [],
   "test-depends": [],
@@ -17,7 +17,9 @@
     "ML::NLPTemplateEngine::Core": "lib/ML/NLPTemplateEngine/Core.rakumod",
     "ML::NLPTemplateEngine::Ingestion": "lib/ML/NLPTemplateEngine/Ingestion.rakumod"
   },
-  "resources": [],
+  "resources": [
+    "dfQASParameters.csv"
+  ],
   "license": "Artistic-2.0",
   "tags": [
     "ai",
