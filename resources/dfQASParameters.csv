@@ -465,30 +465,108 @@
 "Questions","QRMon","Which regression quantiles","Threshold",0.6
 "Questions","QRMon","Which regression quantiles","Parameter","probs"
 "Questions","QRMon","Which regression quantiles","ContextWordsToRemove","{""regression quantiles""}"
-"Templates","QuantileRegression","Python","Template","TemplateObject[{""\""Not implemented\""""}, CombinerFunction -> StringJoin, InsertionFunction -> TextString]"
-"Templates","QuantileRegression","R","Template","TemplateObject[{""\""Not implemented\""""}, CombinerFunction -> StringJoin, InsertionFunction -> TextString]"
-"Templates","QuantileRegression","WL","Template","TemplateObject[{""Module[{qrData,aQRFuncs,aQRPlotData},\nqrData = "", TemplateSlot[""dataset""], "";\nqrData = N@Which[ Head[qrData] === TemporalData, QuantityMagnitude[qrData[\""Path\""]], VectorQ[qrData], Transpose[{Range@Length@qrData, qrData}], True, qrData];\nEcho[ResourceFunction[\""RecordsSummary\""][qrData],\""data summary:\""];\naQRFuncs = AssociationThread[ "", TemplateSlot[""probs""], "", ResourceFunction[\""QuantileRegression\""][qrData, "", TemplateSlot[""knots""], "", "", TemplateSlot[""probs""], "", InterpolationOrder->"", TemplateSlot[""intOrder""], ""]];\naQRPlotData = Prepend[(Transpose[{qrData[[All, 1]], #1 /@ qrData[[All, 1]]}] &) /@ aQRFuncs, \""data\"" -> qrData];\nEcho[ListPlot[Values[aQRPlotData], Joined -> Prepend[Table[True, Length[aQRPlotData]-1], False], PlotLegends -> Keys[aQRPlotData], PlotTheme -> \""Detailed\"", FrameLabel -> {\""Regressor\"", \""Value\""}, ImageSize -> Medium],\""regression quantiles:\""];\nEcho[Map[Function[{qFunc},\nDateListPlot[\nMap[{#[[1]], (qFunc[#[[1]]] - #[[2]])/#[[2]]} &, qrData], Joined -> False, PlotRange -> All, Filling -> Axis, PlotTheme -> \""Detailed\"", ImageSize -> Medium]], aQRFuncs],\""errors:\""];\n]""}, CombinerFunction -> StringJoin, InsertionFunction -> TextString]"
-"Templates","QRMon","Python","Template","TemplateObject[{""print(\""Example API -- no actual implementation !!!\"")\nqrObj = QRMonUnit("", TemplateSlot[""dataset""], "")\nQRMonEchoDataSummary(qrObj)\nqrObj = QRMonQuantileRegression(obj, df = "", TemplateSlot[""knots""], "", probabilities = "", TemplateSlot[""probs""], "", degree = "", TemplateSlot[""intOrder""], "")\nQRMonPlot(qrObj, datePlotQ = "", TemplateSlot[""dateListPlotQ""], "" )\nQRMonErrorsPlot(qrObj, relativeErrors = "", TemplateSlot[""relativeErrorsQ""], "", datePlotQ = "", TemplateSlot[""dateListPlotQ""], "")""}, CombinerFunction -> StringJoin, InsertionFunction -> TextString]"
-"Templates","QRMon","R","Template","TemplateObject[{""qrObj <-\nQRMonUnit("", TemplateSlot[""dataset""], "") %>%\nQRMonEchoDataSummary() %>%\nQRMonQuantileRegression(df = "", TemplateSlot[""knots""], "", probabilities = "", TemplateSlot[""probs""], "", degree = "", TemplateSlot[""intOrder""], "") %>%\nQRMonPlot(datePlotQ = "", TemplateSlot[""dateListPlotQ""], "" ) %>%\nQRMonErrorsPlot(relativeErrors = "", TemplateSlot[""relativeErrorsQ""], "", datePlotQ = "", TemplateSlot[""dateListPlotQ""], "")""}, CombinerFunction -> StringJoin, InsertionFunction -> TextString]"
-"Templates","QRMon","WL","Template","TemplateObject[{""qrObj=\nQRMonUnit["", TemplateSlot[""dataset""], ""]⟹\nQRMonEchoDataSummary[]⟹\nQRMonQuantileRegression["", TemplateSlot[""knots""], "", "", TemplateSlot[""probs""], "", InterpolationOrder->"", TemplateSlot[""intOrder""], ""]⟹\nQRMonPlot[\""DateListPlot\""->"", TemplateSlot[""dateListPlotQ""], "",PlotTheme->\""Detailed\""]⟹\nQRMonErrorPlots[\""RelativeErrors\""->"", TemplateSlot[""relativeErrorsQ""], "",\""DateListPlot\""->"", TemplateSlot[""dateListPlotQ""], "",PlotTheme->\""Detailed\""];""}, CombinerFunction -> StringJoin, InsertionFunction -> TextString]"
-"Templates","LatentSemanticAnalysis","Python","Template","TemplateObject[{""print(\""Example API -- no actual implementation !!!\"")\nlsaObj = LSAMonUnit("", TemplateSlot[""textData""], "")\nlsaObj = LSAMonMakeDocumentTermMatrix(lsaObj, stemWordsQ = "", TemplateSlot[""stemmingRules""], "", stopWords = "", TemplateSlot[""stopWords""], "")\nLSAMonEchoDocumentTermMatrixStatistics(lsaObj, logBase = 10)\nlsaObj = LSAMonApplyTermWeightFunctions(lsaObj, globalWeightFunction = \"""", TemplateSlot[""globalWeightFunction""], ""\"", localWeightFunction = \"""", TemplateSlot[""localWeightFunction""], ""\"", normalizerFunction = \"""", TemplateSlot[""normalizerFunction""], ""\"")\nlsaObj = LSAMonExtractTopics(lsaObj, numberOfTopics = "", TemplateSlot[""numberOfTopics""], "", method = \"""", TemplateSlot[""method""], ""\"", maxSteps = "", TemplateSlot[""maxSteps""], "", minNumberOfDocumentsPerTerm = "", TemplateSlot[""minNumberOfDocumentsPerTerm""], "")\nLSAMonEchoTopicsTable(lsaObj, numberOfTerms = "", TemplateSlot[""topicsTableNumberOfTerms""], "", wideFormQ = TRUE)\nLSAMonEchoStatisticalThesaurus(lsaObj, words = "", TemplateSlot[""statThesaurusWords""], "")""}, CombinerFunction -> StringJoin, InsertionFunction -> TextString]"
-"Templates","LatentSemanticAnalysis","R","Template","TemplateObject[{""lsaObj <-\nLSAMonUnit("", TemplateSlot[""textData""], "") %>%\nLSAMonMakeDocumentTermMatrix(stemWordsQ = "", TemplateSlot[""stemmingRules""], "", stopWords = "", TemplateSlot[""stopWords""], "") %>%\nLSAMonEchoDocumentTermMatrixStatistics(logBase = 10) %>%\nLSAMonApplyTermWeightFunctions(globalWeightFunction = \"""", TemplateSlot[""globalWeightFunction""], ""\"", localWeightFunction = \"""", TemplateSlot[""localWeightFunction""], ""\"", normalizerFunction = \"""", TemplateSlot[""normalizerFunction""], ""\"") %>%\nLSAMonExtractTopics(numberOfTopics = "", TemplateSlot[""numberOfTopics""], "", method = \"""", TemplateSlot[""method""], ""\"", maxSteps = "", TemplateSlot[""maxSteps""], "", minNumberOfDocumentsPerTerm = "", TemplateSlot[""minNumberOfDocumentsPerTerm""], "") %>%\nLSAMonEchoTopicsTable(numberOfTerms = "", TemplateSlot[""topicsTableNumberOfTerms""], "", wideFormQ = TRUE) %>%\nLSAMonEchoStatisticalThesaurus(words = "", TemplateSlot[""statThesaurusWords""], "")""}, CombinerFunction -> StringJoin, InsertionFunction -> TextString]"
-"Templates","LatentSemanticAnalysis","WL","Template","TemplateObject[{""lsaObj=\nLSAMonUnit["", TemplateSlot[""textData""], ""] ⟹\nLSAMonMakeDocumentTermMatrix[ \""StemmingRules\"" -> "", TemplateSlot[""stemmingRules""], "", \""StopWords\"" -> "", TemplateSlot[""stopWords""], ""] ⟹\nLSAMonEchoDocumentTermMatrixStatistics[\""LogBase\"" -> 10] ⟹\nLSAMonApplyTermWeightFunctions[\""GlobalWeightFunction\"" -> \"""", TemplateSlot[""globalWeightFunction""], ""\"", \""LocalWeightFunction\"" -> \"""", TemplateSlot[""localWeightFunction""], ""\"", \""NormalizerFunction\"" -> \"""", TemplateSlot[""normalizerFunction""], ""\""] ⟹\nLSAMonExtractTopics[\""NumberOfTopics\"" -> "", TemplateSlot[""numberOfTopics""], "", Method -> \"""", TemplateSlot[""method""], ""\"", \""MaxSteps\"" -> "", TemplateSlot[""maxSteps""], "", \""MinNumberOfDocumentsPerTerm\"" -> "", TemplateSlot[""minNumberOfDocumentsPerTerm""], ""] ⟹\nLSAMonEchoTopicsTable[\""NumberOfTerms\"" -> "", TemplateSlot[""topicsTableNumberOfTerms""], ""] ⟹\nLSAMonEchoStatisticalThesaurus[ \""Words\"" -> "", TemplateSlot[""statThesaurusWords""], ""];""}, CombinerFunction -> StringJoin, InsertionFunction -> TextString]"
-"Templates","Classification","Python","Template","TemplateObject[{""\""Not implemented\""""}, CombinerFunction -> StringJoin, InsertionFunction -> TextString]"
-"Templates","Classification","R","Template","TemplateObject[{""\""Not implemented\""""}, CombinerFunction -> StringJoin, InsertionFunction -> TextString]"
-"Templates","Classification","WL","Template","TemplateObject[{""Module[{clData,clDataTraining,clDataTesting,clObj,clCMObj,clMeasurements},\nclData = ClConToNormalClassifierData["", TemplateSlot[""data""], ""];\n{clDataTraining, clDataTesting} = TakeDrop[clData, Floor["", TemplateSlot[""splitRatio""], "" * Length[clData]]];\nclObj = Classify[clDataTraining, Method -> \"""", TemplateSlot[""method""], ""\""];\nclCMObj = ClassifierMeasurements[clObj, clDataTesting];\nEcho[ clCMObj[{\""Accuracy\"", \""Precision\"", \""Recall\""}], \""measurements:\""];\nclMeasurements = Intersection[clCMObj[\""Properties\""], "", TemplateSlot[""measurementFuncs""], ""];\nIf[ Length[clMeasurements] > 0, Echo[ clCMObj[clMeasurements], ToString[clMeasurements] <> \"":\""]];\nEcho[ clCMObj[\""ConfusionMatrixPlot\""], \""confusion matrix:\""];\n]""}, CombinerFunction -> StringJoin, InsertionFunction -> TextString]"
-"Templates","ClCon","Python","Template","TemplateObject[{""\""Not implemented\""""}, CombinerFunction -> StringJoin, InsertionFunction -> TextString]"
-"Templates","ClCon","R","Template","TemplateObject[{""\""Not implemented\""""}, CombinerFunction -> StringJoin, InsertionFunction -> TextString]"
-"Templates","ClCon","WL","Template","TemplateObject[{""clObj=\nClConUnit["", TemplateSlot[""data""], ""]⟹\nClConSplitData["", TemplateSlot[""splitRatio""], ""]⟹\nClConEchoDataSummary⟹\nClConMakeClassifier[\"""", TemplateSlot[""method""], ""\""]⟹\nClConClassifierMeasurements["", TemplateSlot[""measurementFuncs""], ""]⟹\nClConEchoValue⟹\nClConROCPlot["", TemplateSlot[""rocPlotFuncs""], ""];""}, CombinerFunction -> StringJoin, InsertionFunction -> TextString]"
-"Templates","RandomTabularDataset","Python","Template","TemplateObject[{""print(\""Example API -- no actual implementation !!!\"")\n            RandomDataFrame(nrow = "", TemplateSlot[""nrow""], "", ncol = "", TemplateSlot[""ncol""], "", columnNamesGenerator = "", TemplateSlot[""columnNamesGenerator""], "", form =  \"""", TemplateSlot[""form""], ""\"", maxNumberOfValues = "", TemplateSlot[""maxNumberOfValues""], "", minNumberOfValues = "", TemplateSlot[""minNumberOfValues""], "", rowNamesQ = "", TemplateSlot[""rowKeys""], "")""}, CombinerFunction -> StringJoin, InsertionFunction -> TextString]"
-"Templates","RandomTabularDataset","R","Template","TemplateObject[{""RandomDataFrame(nrow = "", TemplateSlot[""nrow""], "", ncol = "", TemplateSlot[""ncol""], "", columnNamesGenerator = "", TemplateSlot[""columnNamesGenerator""], "", form =  \"""", TemplateSlot[""form""], ""\"", maxNumberOfValues = "", TemplateSlot[""maxNumberOfValues""], "", minNumberOfValues = "", TemplateSlot[""minNumberOfValues""], "", rowNamesQ = "", TemplateSlot[""rowKeys""], "")""}, CombinerFunction -> StringJoin, InsertionFunction -> TextString]"
-"Templates","RandomTabularDataset","WL","Template","TemplateObject[{""ResourceFunction[\""RandomTabularDataset\""][{"", TemplateSlot[""nrow""], "", "", TemplateSlot[""ncol""], ""}, \""ColumnNamesGenerator\"" -> "", TemplateSlot[""columnNamesGenerator""], "", \""Form\"" -> \"""", TemplateSlot[""form""], ""\"", \""MaxNumberOfValues\"" -> "", TemplateSlot[""maxNumberOfValues""], "", \""MinNumberOfValues\"" -> "", TemplateSlot[""minNumberOfValues""], "", \""RowKeys\"" -> "", TemplateSlot[""rowKeys""], ""]""}, CombinerFunction -> StringJoin, InsertionFunction -> TextString]"
-"Templates","Recommendations","Python","Template","TemplateObject[{""print(\""Example API -- no actual implementation !!!\"")\nsmrObj = SMRMonUnit()\nsmrObj = SMRMonCreate( data = "", TemplateSlot[""dataset""], "")\nsmrObj = SMRMonRecommendByProfile(smrObj, profile = "", TemplateSlot[""prof""], "", nrecs = "", TemplateSlot[""nrecs""], "")\nsmrObj = SMRMonJoinAcross(smrObj, data = "", TemplateSlot[""dataset""], "")\nSMRMonEchoValue(smrObj)""}, CombinerFunction -> StringJoin, InsertionFunction -> TextString]"
-"Templates","Recommendations","R","Template","TemplateObject[{""smrObj <-\nSMRMonUnit() %>%\nSMRMonCreate( data = "", TemplateSlot[""dataset""], "") %>%\nSMRMonRecommendByProfile( profile = "", TemplateSlot[""prof""], "", nrecs = "", TemplateSlot[""nrecs""], "") %>%\nSMRMonJoinAcross( data = "", TemplateSlot[""dataset""], "") %>%\nSMRMonEchoValue()""}, CombinerFunction -> StringJoin, InsertionFunction -> TextString]"
-"Templates","Recommendations","WL","Template","TemplateObject[{""smrObj=\nSMRMonUnit[]⟹\nSMRMonCreate["", TemplateSlot[""dataset""], ""]⟹\nSMRMonRecommendByProfile["", TemplateSlot[""prof""], "", "", TemplateSlot[""nrecs""], ""]⟹\nSMRMonJoinAcross["", TemplateSlot[""dataset""], ""]⟹\nSMRMonEchoValue[];""}, CombinerFunction -> StringJoin, InsertionFunction -> TextString]"
-"Templates","NeuralNetworkCreation","Python","Template","TemplateObject[{""\""Not implemented\""""}, CombinerFunction -> StringJoin, InsertionFunction -> TextString]"
-"Templates","NeuralNetworkCreation","R","Template","TemplateObject[{""\""Not implemented\""""}, CombinerFunction -> StringJoin, InsertionFunction -> TextString]"
-"Templates","NeuralNetworkCreation","WL","Template","TemplateObject[{""\""Not implemented\""""}, CombinerFunction -> StringJoin, InsertionFunction -> TextString]"
+"Templates","QuantileRegression","Python","Template","""Not implemented"""
+"Templates","QuantileRegression","R","Template","""Not implemented"""
+"Templates","QuantileRegression","WL","Template","Module[{qrData,aQRFuncs,aQRPlotData},
+qrData = $*dataset;
+qrData = N@Which[ Head[qrData] === TemporalData, QuantityMagnitude[qrData[""Path""]], VectorQ[qrData], Transpose[{Range@Length@qrData, qrData}], True, qrData];
+Echo[ResourceFunction[""RecordsSummary""][qrData],""data summary:""];
+aQRFuncs = AssociationThread[ $*probs, ResourceFunction[""QuantileRegression""][qrData, $*knots, $*probs, InterpolationOrder->$*intOrder]];
+aQRPlotData = Prepend[(Transpose[{qrData[[All, 1]], #1 /@ qrData[[All, 1]]}] &) /@ aQRFuncs, ""data"" -> qrData];
+Echo[ListPlot[Values[aQRPlotData], Joined -> Prepend[Table[True, Length[aQRPlotData]-1], False], PlotLegends -> Keys[aQRPlotData], PlotTheme -> ""Detailed"", FrameLabel -> {""Regressor"", ""Value""}, ImageSize -> Medium],""regression quantiles:""];
+Echo[Map[Function[{qFunc},
+DateListPlot[
+Map[{#[[1]], (qFunc[#[[1]]] - #[[2]])/#[[2]]} &, qrData], Joined -> False, PlotRange -> All, Filling -> Axis, PlotTheme -> ""Detailed"", ImageSize -> Medium]], aQRFuncs],""errors:""];
+]"
+"Templates","QRMon","Python","Template","print(""Example API -- no actual implementation !!!"")
+qrObj = QRMonUnit($*dataset)
+QRMonEchoDataSummary(qrObj)
+qrObj = QRMonQuantileRegression(obj, df = $*knots, probabilities = $*probs, degree = $*intOrder)
+QRMonPlot(qrObj, datePlotQ = $*dateListPlotQ )
+QRMonErrorsPlot(qrObj, relativeErrors = $*relativeErrorsQ, datePlotQ = $*dateListPlotQ)"
+"Templates","QRMon","R","Template","qrObj <-
+QRMonUnit($*dataset) %>%
+QRMonEchoDataSummary() %>%
+QRMonQuantileRegression(df = $*knots, probabilities = $*probs, degree = $*intOrder) %>%
+QRMonPlot(datePlotQ = $*dateListPlotQ ) %>%
+QRMonErrorsPlot(relativeErrors = $*relativeErrorsQ, datePlotQ = $*dateListPlotQ)"
+"Templates","QRMon","WL","Template","qrObj=
+QRMonUnit[$*dataset]⟹
+QRMonEchoDataSummary[]⟹
+QRMonQuantileRegression[$*knots, $*probs, InterpolationOrder->$*intOrder]⟹
+QRMonPlot[""DateListPlot""->$*dateListPlotQ,PlotTheme->""Detailed""]⟹
+QRMonErrorPlots[""RelativeErrors""->$*relativeErrorsQ,""DateListPlot""->$*dateListPlotQ,PlotTheme->""Detailed""];"
+"Templates","LatentSemanticAnalysis","Python","Template","print(""Example API -- no actual implementation !!!"")
+lsaObj = LSAMonUnit($*textData)
+lsaObj = LSAMonMakeDocumentTermMatrix(lsaObj, stemWordsQ = $*stemmingRules, stopWords = $*stopWords)
+LSAMonEchoDocumentTermMatrixStatistics(lsaObj, logBase = 10)
+lsaObj = LSAMonApplyTermWeightFunctions(lsaObj, globalWeightFunction = ""$*globalWeightFunction"", localWeightFunction = ""$*localWeightFunction"", normalizerFunction = ""$*normalizerFunction"")
+lsaObj = LSAMonExtractTopics(lsaObj, numberOfTopics = $*numberOfTopics, method = ""$*method"", maxSteps = $*maxSteps, minNumberOfDocumentsPerTerm = $*minNumberOfDocumentsPerTerm)
+LSAMonEchoTopicsTable(lsaObj, numberOfTerms = $*topicsTableNumberOfTerms, wideFormQ = TRUE)
+LSAMonEchoStatisticalThesaurus(lsaObj, words = $*statThesaurusWords)"
+"Templates","LatentSemanticAnalysis","R","Template","lsaObj <-
+LSAMonUnit($*textData) %>%
+LSAMonMakeDocumentTermMatrix(stemWordsQ = $*stemmingRules, stopWords = $*stopWords) %>%
+LSAMonEchoDocumentTermMatrixStatistics(logBase = 10) %>%
+LSAMonApplyTermWeightFunctions(globalWeightFunction = ""$*globalWeightFunction"", localWeightFunction = ""$*localWeightFunction"", normalizerFunction = ""$*normalizerFunction"") %>%
+LSAMonExtractTopics(numberOfTopics = $*numberOfTopics, method = ""$*method"", maxSteps = $*maxSteps, minNumberOfDocumentsPerTerm = $*minNumberOfDocumentsPerTerm) %>%
+LSAMonEchoTopicsTable(numberOfTerms = $*topicsTableNumberOfTerms, wideFormQ = TRUE) %>%
+LSAMonEchoStatisticalThesaurus(words = $*statThesaurusWords)"
+"Templates","LatentSemanticAnalysis","WL","Template","lsaObj=
+LSAMonUnit[$*textData] ⟹
+LSAMonMakeDocumentTermMatrix[ ""StemmingRules"" -> $*stemmingRules, ""StopWords"" -> $*stopWords] ⟹
+LSAMonEchoDocumentTermMatrixStatistics[""LogBase"" -> 10] ⟹
+LSAMonApplyTermWeightFunctions[""GlobalWeightFunction"" -> ""$*globalWeightFunction"", ""LocalWeightFunction"" -> ""$*localWeightFunction"", ""NormalizerFunction"" -> ""$*normalizerFunction""] ⟹
+LSAMonExtractTopics[""NumberOfTopics"" -> $*numberOfTopics, Method -> ""$*method"", ""MaxSteps"" -> $*maxSteps, ""MinNumberOfDocumentsPerTerm"" -> $*minNumberOfDocumentsPerTerm] ⟹
+LSAMonEchoTopicsTable[""NumberOfTerms"" -> $*topicsTableNumberOfTerms] ⟹
+LSAMonEchoStatisticalThesaurus[ ""Words"" -> $*statThesaurusWords];"
+"Templates","Classification","Python","Template","""Not implemented"""
+"Templates","Classification","R","Template","""Not implemented"""
+"Templates","Classification","WL","Template","Module[{clData,clDataTraining,clDataTesting,clObj,clCMObj,clMeasurements},
+clData = ClConToNormalClassifierData[$*data];
+{clDataTraining, clDataTesting} = TakeDrop[clData, Floor[$*splitRatio * Length[clData]]];
+clObj = Classify[clDataTraining, Method -> ""$*method""];
+clCMObj = ClassifierMeasurements[clObj, clDataTesting];
+Echo[ clCMObj[{""Accuracy"", ""Precision"", ""Recall""}], ""measurements:""];
+clMeasurements = Intersection[clCMObj[""Properties""], $*measurementFuncs];
+If[ Length[clMeasurements] > 0, Echo[ clCMObj[clMeasurements], ToString[clMeasurements] <> "":""]];
+Echo[ clCMObj[""ConfusionMatrixPlot""], ""confusion matrix:""];
+]"
+"Templates","ClCon","Python","Template","""Not implemented"""
+"Templates","ClCon","R","Template","""Not implemented"""
+"Templates","ClCon","WL","Template","clObj=
+ClConUnit[$*data]⟹
+ClConSplitData[$*splitRatio]⟹
+ClConEchoDataSummary⟹
+ClConMakeClassifier[""$*method""]⟹
+ClConClassifierMeasurements[$*measurementFuncs]⟹
+ClConEchoValue⟹
+ClConROCPlot[$*rocPlotFuncs];"
+"Templates","RandomTabularDataset","Python","Template","print(""Example API -- no actual implementation !!!"")
+            RandomDataFrame(nrow = $*nrow, ncol = $*ncol, columnNamesGenerator = $*columnNamesGenerator, form =  ""$*form"", maxNumberOfValues = $*maxNumberOfValues, minNumberOfValues = $*minNumberOfValues, rowNamesQ = $*rowKeys)"
+"Templates","RandomTabularDataset","R","Template","RandomDataFrame(nrow = $*nrow, ncol = $*ncol, columnNamesGenerator = $*columnNamesGenerator, form =  ""$*form"", maxNumberOfValues = $*maxNumberOfValues, minNumberOfValues = $*minNumberOfValues, rowNamesQ = $*rowKeys)"
+"Templates","RandomTabularDataset","WL","Template","ResourceFunction[""RandomTabularDataset""][{$*nrow, $*ncol}, ""ColumnNamesGenerator"" -> $*columnNamesGenerator, ""Form"" -> ""$*form"", ""MaxNumberOfValues"" -> $*maxNumberOfValues, ""MinNumberOfValues"" -> $*minNumberOfValues, ""RowKeys"" -> $*rowKeys]"
+"Templates","Recommendations","Python","Template","print(""Example API -- no actual implementation !!!"")
+smrObj = SMRMonUnit()
+smrObj = SMRMonCreate( data = $*dataset)
+smrObj = SMRMonRecommendByProfile(smrObj, profile = $*prof, nrecs = $*nrecs)
+smrObj = SMRMonJoinAcross(smrObj, data = $*dataset)
+SMRMonEchoValue(smrObj)"
+"Templates","Recommendations","R","Template","smrObj <-
+SMRMonUnit() %>%
+SMRMonCreate( data = $*dataset) %>%
+SMRMonRecommendByProfile( profile = $*prof, nrecs = $*nrecs) %>%
+SMRMonJoinAcross( data = $*dataset) %>%
+SMRMonEchoValue()"
+"Templates","Recommendations","WL","Template","smrObj=
+SMRMonUnit[]⟹
+SMRMonCreate[$*dataset]⟹
+SMRMonRecommendByProfile[$*prof, $*nrecs]⟹
+SMRMonJoinAcross[$*dataset]⟹
+SMRMonEchoValue[];"
+"Templates","NeuralNetworkCreation","Python","Template","""Not implemented"""
+"Templates","NeuralNetworkCreation","R","Template","""Not implemented"""
+"Templates","NeuralNetworkCreation","WL","Template","""Not implemented"""
 "Defaults","ProgrammingEnvironment","All","Language","WL"
 "Defaults","ProgrammingEnvironment","All","Packages","None"
 "Defaults","QuantileRegression","All","knots",12
