@@ -139,6 +139,7 @@ multi sub Concretize(Str $sf,
 
         for %questionToParam.kv -> $k, $v {
             $tmplFilledIn .= subst( /  ',' \h* 'TemplateSlot["' $v '"]' \h* ',' \h* /, %answers{$k ~ '?'}):g;
+            $tmplFilledIn .= subst( / '`' $v '`' /, %answers{$k ~ '?'}):g;
             $tmplFilledIn .= subst( / '$*' $v /, %answers{$k ~ '?'}):g;
         }
 
