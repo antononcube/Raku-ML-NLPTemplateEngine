@@ -15,7 +15,7 @@ sub get-specs(Str $type = 'standard') is export {
 
     if %qasSpecs { return %qasSpecs; }
 
-    %qasSpecs = ConvertCSVData(%?RESOURCES<dfQASParameters.csv>.Str);
+    %qasSpecs = ConvertCSVData(%?RESOURCES<dfQASParameters.csv>.open);
 
     return %qasSpecs;
 }
@@ -53,7 +53,7 @@ multi sub Concretize(Whatever, $command, *%args) {
 
     my @lbls = %workflowSpecToFullName.values.unique;
 
-    my %args2 = {request => 'which of these workflows characterizes it'} , %args;
+    my %args2 = { request => 'which of these workflows characterizes it' }, %args;
     my $sf = llm-classify($command, @lbls, |%args2);
 
     if %args<echo> // False {
@@ -88,6 +88,8 @@ multi sub Concretize(Str $sf,
                      *%args
                      ) {
 
+    #------------------------------------------------------
+    my Bool $echo = %args<echo> // False;
 
     #------------------------------------------------------
     if $format.isa(Whatever) { $format = 'hash' }
@@ -108,6 +110,8 @@ multi sub Concretize(Str $sf,
 
     my %questionToParam = %paramToQuestion.invert;
 
+    note (:%questionToParam) if $echo;
+
     my @questions2 = %questionToParam.keys;
 
     @questions2 = @questions2 »~» '?';
@@ -119,9 +123,13 @@ multi sub Concretize(Str $sf,
     my %args2 = %args.grep({ $_.key ∉ <pairs p> });
     my $ans = find-textual-answer($command, @questions2, |%args2):pairs;
 
+    note (:$ans) if $echo;
+
     my $tmpl = get-specs<Templates>{$sf}{$lang};
 
     my $tmpl2 = $tmpl.values.head.head<Value>;
+
+    note (:$tmpl2) if $echo;
 
     #------------------------------------------------------
     # Remove residual words
@@ -131,20 +139,21 @@ multi sub Concretize(Str $sf,
     # Process template
     #------------------------------------------------------
 
-    if $ans ~~ Positional {
+    if $ans ~~ Positional:D | Associative:D {
 
         my %answers = |$ans;
 
         my $tmplFilledIn = $tmpl2;
 
         for %questionToParam.kv -> $k, $v {
-            $tmplFilledIn .= subst( /  ',' \h* 'TemplateSlot["' $v '"]' \h* ',' \h* /, %answers{$k ~ '?'}):g;
-            $tmplFilledIn .= subst( / '`' $v '`' /, %answers{$k ~ '?'}):g;
-            $tmplFilledIn .= subst( / '$*' $v /, %answers{$k ~ '?'}):g;
+            $tmplFilledIn .= subst(/  ',' \h* 'TemplateSlot["' $v '"]' \h* ',' \h* /, %answers{$k ~ '?'}):g;
+            $tmplFilledIn .= subst(/ '`' $v '`' /, %answers{$k ~ '?'}):g;
+            $tmplFilledIn .= subst(/ '$*' $v /, %answers{$k ~ '?'}):g;
         }
 
         $tmplFilledIn .= subst(/ ^ 'TemplateObject[{"'/, '');
-        $tmplFilledIn .= subst(/ '"},' \h* 'CombinerFunction -> StringJoin' \h* ',' \h* 'InsertionFunction -> TextString]' $ /, '');
+        $tmplFilledIn .= subst(
+                / '"},' \h* 'CombinerFunction -> StringJoin' \h* ',' \h* 'InsertionFunction -> TextString]' $ /, '');
 
         return $tmplFilledIn;
     }
