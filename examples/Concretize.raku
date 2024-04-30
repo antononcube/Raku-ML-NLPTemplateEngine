@@ -21,7 +21,7 @@ for @commands -> $cmd {
     say '=' x 60;
     say $cmd;
     say '-' x 60;
-    say concretize(Whatever, $cmd, :$lang, :$llm, :$model, max-tokens => 300, temperature => 0.3):!echo;
+    say concretize($cmd, :$lang, :$llm, :$model, max-tokens => 300, temperature => 0.3):!echo;
 }
 
 # This uses direct specification of the workflow type
