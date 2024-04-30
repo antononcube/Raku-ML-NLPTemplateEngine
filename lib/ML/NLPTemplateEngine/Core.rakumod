@@ -47,42 +47,45 @@ my %workflowFullNameToSpec = %workflowSpecToFullName.pairs.classify({ $_.value }
 # Concretize
 #===========================================================
 
-our proto Concretize($sf, $command, *%args) is export {*}
+our proto Concretize($command, *%args) is export {*}
 
-multi sub Concretize(Whatever, $command, *%args) {
+multi sub Concretize($command,
+                     :$template is copy where $template.isa(Whatever) || $template.isa(WhateverCode) = Whatever,
+                     *%args)
+{
 
     my @lbls = %workflowSpecToFullName.values.unique;
 
     my %args2 = { request => 'which of these workflows characterizes it' }, %args;
-    my $sf = llm-classify($command, @lbls, |%args2);
+    $template = llm-classify($command, @lbls, |%args2);
 
     if %args<echo> // False {
-        note "Workflow classification result: $sf";
+        note "Workflow classification result: $template";
     }
 
-    if %workflowFullNameToSpec{$sf}:exists {
+    if %workflowFullNameToSpec{$template}:exists {
 
         # Pick workflow
-        my $sf2 = %workflowFullNameToSpec{$sf};
+        my $template2 = %workflowFullNameToSpec{$template};
 
-        if $sf2 ~~ Positional {
-            $sf2 = $sf2.grep({ $_ ∈ <LSAMon ClCon SMRMon QRMon> });
-            if !$sf2.elems { $sf2 = %workflowFullNameToSpec{$sf} }
-            $sf2 = $sf2.head;
+        if $template2 ~~ Positional:D {
+            $template2 = $template2.grep({ $_ ∈ <LSAMon ClCon SMRMon QRMon> });
+            if !$template2.elems { $template2 = %workflowFullNameToSpec{$template} }
+            $template2 = $template2.head;
         }
 
         # Delegate
-        return Concretize($sf2, $command, |%args);
+        return Concretize($command, template => $template2, |%args);
 
     } else {
-        die 'Cannot determine the wokflow type of the given command.';
+        die 'Cannot determine the workflow type of the given command.';
     }
 }
 
-multi sub Concretize(Str $sf,
-                     $command,
-                     Str :$lang = 'WL',
-                     Bool :$avoid-monads = False,
+multi sub Concretize($command,
+                     Str:D :$template!,
+                     Str:D :$lang = 'WL',
+                     Bool:D :$avoid-monads = False,
                      :$format is copy = 'hash',
                      :$user-id = '',
                      *%args
@@ -97,14 +100,14 @@ multi sub Concretize(Str $sf,
     unless $format ~~ Str && $format ∈ <hash code>;
 
     #------------------------------------------------------
-    die "There is no template for the language $lang."
-    unless get-specs<Templates>{$sf}{$lang}:exists;
+    die "There is no template $template for the language $lang."
+    unless get-specs<Templates>{$template}{$lang}:exists;
 
     #------------------------------------------------------
     # Get questions
     #------------------------------------------------------
 
-    my %qas2 = get-specs()<ParameterQuestions>{$sf};
+    my %qas2 = get-specs()<ParameterQuestions>{$template};
 
     my %paramToQuestion = %qas2.map({ $_.key => $_.value.keys.pick });
 
@@ -125,7 +128,7 @@ multi sub Concretize(Str $sf,
 
     note (:$ans) if $echo;
 
-    my $tmpl = get-specs<Templates>{$sf}{$lang};
+    my $tmpl = get-specs<Templates>{$template}{$lang};
 
     my $tmpl2 = $tmpl.values.head.head<Value>;
 
