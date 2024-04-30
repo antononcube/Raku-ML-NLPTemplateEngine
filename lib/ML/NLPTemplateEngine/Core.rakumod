@@ -115,6 +115,10 @@ multi sub Concretize($command,
 
     note (:%questionToParam) if $echo;
 
+    my %paramTypePatterns = get-specs()<ParameterTypePatterns>{$template};
+
+    note (:%paramTypePatterns) if $echo;
+
     my @questions2 = %questionToParam.keys;
 
     @questions2 = @questions2 »~» '?';
@@ -148,10 +152,27 @@ multi sub Concretize($command,
 
         my $tmplFilledIn = $tmpl2;
 
-        for %questionToParam.kv -> $k, $v {
-            $tmplFilledIn .= subst(/  ',' \h* 'TemplateSlot["' $v '"]' \h* ',' \h* /, %answers{$k ~ '?'}):g;
-            $tmplFilledIn .= subst(/ '`' $v '`' /, %answers{$k ~ '?'}):g;
-            $tmplFilledIn .= subst(/ '$*' $v /, %answers{$k ~ '?'}):g;
+        for %questionToParam.kv -> $k, $param {
+            my $ans = %answers{$k ~ '?'};
+
+            my $ans2 = do given %paramTypePatterns{$param} {
+                when $_ ∈ <_?BooleanQ Bool> {
+                    $ans.lc ∈ <false n/a no none null> ?? 'False' !! 'True'
+                }
+                when $_ ∈ <{_?StringQ..} {_String..}> {
+                    "[$ans]"
+                }
+                when $_ ∈ <{_?NumericQ..} {_?NumberQ..} {_Integer..} {_?IntegerQ..}> {
+                    "[$ans]"
+                }
+                default {
+                    $ans
+                }
+            }
+
+            $tmplFilledIn .= subst(/  ',' \h* 'TemplateSlot["' $param '"]' \h* ',' \h* /, $ans2):g;
+            $tmplFilledIn .= subst(/ '`' $param '`' /, $ans2):g;
+            $tmplFilledIn .= subst(/ '$*' $param /, $ans2):g;
         }
 
         $tmplFilledIn .= subst(/ ^ 'TemplateObject[{"'/, '');
