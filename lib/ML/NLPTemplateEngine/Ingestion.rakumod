@@ -57,7 +57,7 @@ multi sub normalize-template(Str $tmpl) {
 
 our proto ConvertCSVDataForType(|) is export {*}
 
-multi sub ConvertCSVDataForType(@dsTESpecs, Str $dataType where * eq "ParameterQuestions") {
+multi sub ConvertCSVDataForType(@dsTESpecs, Str $dataType where *eq "ParameterQuestions") {
 
     my @dsQuery = @dsTESpecs.grep({ $_<DataType> eq $dataType });
 
@@ -75,7 +75,7 @@ multi sub ConvertCSVDataForType(@dsTESpecs, Str $dataType where * eq "ParameterQ
     return %res;
 }
 
-multi sub ConvertCSVDataForType(@dsTESpecs, Str $dataType where * eq "Questions") {
+multi sub ConvertCSVDataForType(@dsTESpecs, Str $dataType where *eq "Questions") {
 
     my @dsQuery = @dsTESpecs.grep({ $_<DataType> eq $dataType });
 
@@ -92,7 +92,7 @@ multi sub ConvertCSVDataForType(@dsTESpecs, Str $dataType where * eq "Questions"
     return %res;
 }
 
-multi sub ConvertCSVDataForType(@dsTESpecs, Str $dataType where * eq "Templates") {
+multi sub ConvertCSVDataForType(@dsTESpecs, Str $dataType where *eq "Templates") {
 
     my @dsQuery = @dsTESpecs.grep({ $_<DataType> eq $dataType });
 
@@ -110,7 +110,7 @@ multi sub ConvertCSVDataForType(@dsTESpecs, Str $dataType where * eq "Templates"
     return %res;
 }
 
-multi sub ConvertCSVDataForType(@dsTESpecs, Str $dataType where * eq "Defaults") {
+multi sub ConvertCSVDataForType(@dsTESpecs, Str $dataType where *eq "Defaults") {
 
     my @dsQuery = @dsTESpecs.grep({ $_<DataType> eq $dataType });
 
@@ -131,7 +131,7 @@ multi sub ConvertCSVDataForType(@dsTESpecs, Str $dataType where * eq "Defaults")
     return %res;
 }
 
-multi sub ConvertCSVDataForType(@dsTESpecs, Str $dataType where * eq "Shortcuts") {
+multi sub ConvertCSVDataForType(@dsTESpecs, Str $dataType where *eq "Shortcuts") {
 
     my @dsQuery = @dsTESpecs.grep({ $_<DataType> eq $dataType });
 
@@ -153,7 +153,7 @@ multi sub ConvertCSVDataForType(@dsTESpecs, Str $dataType where * eq "Shortcuts"
 
 our proto ConvertCSVData(|) is export {*}
 
-multi sub ConvertCSVData(Str $fileName where *.IO.f) {
+multi sub ConvertCSVData($fileName where *.IO.f) {
     my @dsTESpecs = csv(in => $fileName, headers => 'auto');
     return ConvertCSVData(@dsTESpecs);
 }
