@@ -1,14 +1,13 @@
 #!/usr/bin/env raku
 use v6.d;
 
-use lib '.';
-use lib './lib';
+use lib <. lib>;
 
 use ML::NLPTemplateEngine;
 
 my $lang = 'WL';
-my $llm = 'openai';
-my $model = 'text-davinci-003';
+my $llm = 'gemini';
+my $model = 'gemini-1.0-pro';
 
 my @commands = [
     'Make a classifier with the method RandomForest over the data dfTitanic; show precision and accuracy; plot True Positive Rate vs Positive Predictive Value.',
@@ -19,9 +18,10 @@ my @commands = [
 
 # This uses workflow classification
 for @commands -> $cmd {
+    say '=' x 60;
     say $cmd;
-    say concretize(Whatever, $cmd, :$lang, :$llm, :$model, max-tokens => 300, temperature => 0.3):!echo;
     say '-' x 60;
+    say concretize(Whatever, $cmd, :$lang, :$llm, :$model, max-tokens => 300, temperature => 0.3):!echo;
 }
 
 # This uses direct specification of the workflow type
