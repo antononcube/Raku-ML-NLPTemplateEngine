@@ -545,6 +545,7 @@ ClConROCPlot[$*rocPlotFuncs];"
 "Templates","RandomTabularDataset","Python","Template","print(""Example API -- no actual implementation !!!"")
             RandomDataFrame(nrow = $*nrow, ncol = $*ncol, columnNamesGenerator = $*columnNamesGenerator, form =  ""$*form"", maxNumberOfValues = $*maxNumberOfValues, minNumberOfValues = $*minNumberOfValues, rowNamesQ = $*rowKeys)"
 "Templates","RandomTabularDataset","R","Template","RandomDataFrame(nrow = $*nrow, ncol = $*ncol, columnNamesGenerator = $*columnNamesGenerator, form =  ""$*form"", maxNumberOfValues = $*maxNumberOfValues, minNumberOfValues = $*minNumberOfValues, rowNamesQ = $*rowKeys)"
+"Templates","RandomTabularDataset","Raku","Template","random-tabular-dataset($*nrow, $*ncol, ""column-names-generator"" => $*columnNamesGenerator, ""form"" => ""$*form"", ""max-number-of-values"" => $*maxNumberOfValues, ""min-number-of-values"" => $*minNumberOfValues, ""row-names"" => $*rowKeys)"
 "Templates","RandomTabularDataset","WL","Template","ResourceFunction[""RandomTabularDataset""][{$*nrow, $*ncol}, ""ColumnNamesGenerator"" -> $*columnNamesGenerator, ""Form"" -> ""$*form"", ""MaxNumberOfValues"" -> $*maxNumberOfValues, ""MinNumberOfValues"" -> $*minNumberOfValues, ""RowKeys"" -> $*rowKeys]"
 "Templates","Recommendations","Python","Template","print(""Example API -- no actual implementation !!!"")
 smrObj = SMRMonUnit()
