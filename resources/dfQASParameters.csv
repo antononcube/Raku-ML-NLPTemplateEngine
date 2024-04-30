@@ -286,10 +286,10 @@
 "Questions","RandomTabularDataset","What kind of format","TypePattern","_String"
 "Questions","RandomTabularDataset","What kind of format","Threshold",0.5
 "Questions","RandomTabularDataset","What kind of format","Parameter","form"
-"Questions","RandomTabularDataset","What is the column name generator","TypePattern","_Integer"
+"Questions","RandomTabularDataset","What is the column name generator","TypePattern","_String"
 "Questions","RandomTabularDataset","What is the column name generator","Threshold",0.5
 "Questions","RandomTabularDataset","What is the column name generator","Parameter","columnNamesGenerator"
-"Questions","RandomTabularDataset","Which is the column name generator","TypePattern","_Integer"
+"Questions","RandomTabularDataset","Which is the column name generator","TypePattern","_String"
 "Questions","RandomTabularDataset","Which is the column name generator","Threshold",0.5
 "Questions","RandomTabularDataset","Which is the column name generator","Parameter","columnNamesGenerator"
 "Questions","RandomTabularDataset","How to generate the column names","TypePattern","_Integer"
