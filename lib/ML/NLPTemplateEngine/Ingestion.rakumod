@@ -1,10 +1,7 @@
-use v6.d;
+unit module ML::NLPTemplateEngine::Ingestion;
 
-use Data::Reshapers;
 use Data::TypeSystem;
 use Text::CSV;
-
-unit module ML::NLPTemplateEngine::Ingestion;
 
 #===========================================================
 # Utilities
@@ -59,9 +56,10 @@ our proto ConvertCSVDataForType(|) is export {*}
 
 multi sub ConvertCSVDataForType(@dsTESpecs, Str $dataType where *eq "ParameterQuestions") {
 
-    my @dsQuery = @dsTESpecs.grep({ $_<DataType> eq $dataType });
+    # This does not do anything here
+    #my @dsQuery = @dsTESpecs.grep({ $_<DataType> eq $dataType });
 
-    @dsQuery = @dsTESpecs.grep({ $_<Key> eq 'Parameter' });
+    my @dsQuery = @dsTESpecs.grep({ $_<Key> eq 'Parameter' });
 
     my %res = Hash.new.classify-list({
         [
@@ -71,6 +69,33 @@ multi sub ConvertCSVDataForType(@dsTESpecs, Str $dataType where *eq "ParameterQu
             $_<Group>
         ]
     }, @dsQuery);
+
+    return %res;
+}
+
+sub merge-param-records(%h where %h.keys.sort eq <Parameter TypePattern>) {
+    return %( %h<Parameter>.head<Value> => %h<TypePattern>.head<Value>);
+}
+
+multi sub ConvertCSVDataForType(@dsTESpecs, Str $dataType where *eq "ParameterTypePatterns") {
+
+    my @dsQuery = @dsTESpecs.grep({ $_<Key> ∈ <Parameter TypePattern> });
+
+    my %res = Hash.new.classify-list({
+        [
+            $_<DataType>,
+            $_<WorkflowType>,
+            $_<Group>,
+            $_<Key>
+        ]
+    }, @dsQuery);
+
+    %res = %res.duckmap(&merge-param-records);
+
+    # At this point we have:
+    # {Questions => {ClCon => {'Classifier measurements' => {measurementFuncs => '{_String..}'}, 'For which data' => {data => '_String'}, ...
+    # Should be a better iteration that this.
+    %res = %res.map({ $_.key => $_.value.map({ $_.key => Hash.new(|$_.value.values>>.pairs) }).Hash });
 
     return %res;
 }
@@ -188,7 +213,7 @@ multi sub ConvertCSVData(@dsTESpecs) {
     # but all nested keys are needed for all types of data.
 
     # For each data type process the records
-    my %res = do for <ParameterQuestions Questions Templates Defaults Shortcuts> -> $dt {
+    my %res = do for <ParameterQuestions ParameterTypePatterns Questions Templates Defaults Shortcuts> -> $dt {
         $dt => ConvertCSVDataForType(@dsTESpecsLocal, $dt).values.head
     }
 
