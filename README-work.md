@@ -66,15 +66,6 @@ END
 concretize($qrCommand);
 ```
 
-```
-# qrObj=
-# QRMonUnit[dfTempBoston]⟹
-# QRMonEchoDataSummary[]⟹
-# QRMonQuantileRegression[N/A, 0.4, 0.6, InterpolationOrder->2]⟹
-# QRMonPlot["DateListPlot"-> N/A,PlotTheme->"Detailed"]⟹
-# QRMonErrorPlots["RelativeErrors"->N/A,"DateListPlot"-> N/A,PlotTheme->"Detailed"];
-```
-
 **Remark:** In the code above the template type, "QuantileRegression", was determined using an LLM-based classifier.
 
 ### Latent Semantic Analysis (R)
@@ -88,17 +79,6 @@ END
 concretize($lsaCommand, template => 'LatentSemanticAnalysis', lang => 'R');
 ```
 
-```
-# lsaObj <-
-# LSAMonUnit(aAbstracts) %>%
-# LSAMonMakeDocumentTermMatrix(stemWordsQ = No, stopWords = $*stopWords) %>%
-# LSAMonEchoDocumentTermMatrixStatistics(logBase = 10) %>%
-# LSAMonApplyTermWeightFunctions(globalWeightFunction = "$*globalWeightFunction", localWeightFunction = "$*localWeightFunction", normalizerFunction = "$*normalizerFunction") %>%
-# LSAMonExtractTopics(numberOfTopics = 20, method = "NNMF", maxSteps = $*maxSteps, minNumberOfDocumentsPerTerm = $*minNumberOfDocumentsPerTerm) %>%
-# LSAMonEchoTopicsTable(numberOfTerms = 20, wideFormQ = TRUE) %>%
-# LSAMonEchoStatisticalThesaurus(words = neural, function, notebook)
-```
-
 ### Random tabular data generation (Raku)
 
 ```perl6
@@ -107,10 +87,6 @@ Make random table with 6 rows and 4 columns with the names <A1 B2 C3 D4>.
 END
 
 concretize($command, template => 'RandomTabularDataset', lang => 'Raku', llm => 'gemini');
-```
-
-```
-# random-tabular-dataset(6, 4, "column-names-generator" => Letters and numbers combination, "form" => "Table with 6 rows and 4 columns", "max-number-of-values" => 24, "min-number-of-values" => 4, "row-names" => $*rowKeys)
 ```
 
 **Remark:** In the code above it was specified to use Google's Gemini LLM service.
@@ -127,10 +103,6 @@ use Data::Importers;
 use Data::Summarizers;
 ```
 
-```
-# (Any)
-```
-
 **1.** Get the "training" templates data (from CSV file you have created or changed) for a new workflow
 (["SendMail"](https://github.com/antononcube/NLP-Template-Engine/blob/main/TemplateData/dsQASParameters-SendMail.csv)):
 
@@ -141,29 +113,10 @@ my @dsSendMail = data-import($url, headers => 'auto');
 records-summary(@dsSendMail, field-names => <DataType WorkflowType Group Key Value>);
 ```
 
-```
-# +-----------------+----------------+-----------------------------+----------------------------+----------------------------------------------------------------------------------+
-# | DataType        | WorkflowType   | Group                       | Key                        | Value                                                                            |
-# +-----------------+----------------+-----------------------------+----------------------------+----------------------------------------------------------------------------------+
-# | Questions => 48 | SendMail => 60 | All                   => 9  | ContextWordsToRemove => 12 | 0.35                                                                       => 9  |
-# | Defaults  => 7  |                | Which files to attach => 4  | Threshold            => 12 | {_String..}                                                                => 8  |
-# | Templates => 3  |                | What it the content   => 4  | TypePattern          => 12 | {"to", "email", "mail", "send", "it", "recipient", "addressee", "address"} => 4  |
-# | Shortcuts => 2  |                | Who to send it to     => 4  | Parameter            => 12 | _String                                                                    => 4  |
-# |                 |                | Who is it from        => 4  | Template             => 3  | None                                                                       => 4  |
-# |                 |                | Who the email is from => 4  | body                 => 1  | to                                                                         => 4  |
-# |                 |                | Which api key         => 4  | bodyHTML             => 1  | body                                                                       => 3  |
-# |                 |                | (Other)               => 27 | (Other)              => 7  | (Other)                                                                    => 24 |
-# +-----------------+----------------+-----------------------------+----------------------------+----------------------------------------------------------------------------------+
-```
-
 **2.** Add the ingested data for the new workflow (from the CSV file) into the NLP-Template-Engine:
 
 ```perl6
 add-template-data(@dsSendMail);
-```
-
-```
-# (Templates ParameterQuestions Defaults Questions Shortcuts)
 ```
 
 **3.** Parse natural language specification with the newly ingested and onboarded workflow ("SendMail"):
@@ -171,10 +124,6 @@ add-template-data(@dsSendMail);
 ```perl6
 "Send email to joedoe@gmail.com with content RandomReal[343], and the subject this is a random real call."
         ==> concretize(template => "SendMail") 
-```
-
-```
-# SendMail[<|"To"->joedoe@gmail.com,"Subject"->"this is a random real call.","Body"->RandomReal[343],"AttachedFiles"->`attachedFiles`|>]
 ```
 
 **4.** Experiment with running the generated code!
