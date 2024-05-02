@@ -130,13 +130,13 @@ multi sub Concretize($command,
     my %args2 = %args.grep({ $_.key ∉ <pairs p> });
     my $ans = find-textual-answer($command, @questions2, |%args2):pairs;
 
-    note (:$ans) if $echo;
+    note (find-textual-answer => $ans.raku) if $echo;
 
     my $tmpl = get-specs<Templates>{$template}{$lang};
 
     my $tmpl2 = $tmpl.values.head.head<Value>;
 
-    note (:$tmpl2) if $echo;
+    note (template => $tmpl2) if $echo;
 
     #------------------------------------------------------
     # Remove residual words
@@ -152,17 +152,15 @@ multi sub Concretize($command,
 
     my %syntax =
             python => %(Automatic => 'None', True => 'True', False => 'False', left-list-bracket => '[',
-                        right-list-bracket => ']'),
+                        right-list-bracket => ']', double-quote => '"'),
             r => %(Automatic => 'NULL', True => 'TRUE', False => 'FALSE', left-list-bracket => 'c(',
-                   right-list-bracket => ')'),
+                   right-list-bracket => ')', double-quote => '"'),
             raku => %(Automatic => 'Whatever', True => 'True', False => 'False', left-list-bracket => '[',
-                      right-list-bracket => ']'),
+                      right-list-bracket => ']', double-quote => '"'),
             wl => %(Automatic => 'Automatic', True => 'True', False => 'False', left-list-bracket => '{',
-                    right-list-bracket => '}');
+                    right-list-bracket => '}', double-quote => '"');
 
     %syntax = %syntax{$lang.lc} // %syntax<raku>;
-
-    note (syntax => %syntax.raku);
 
     #------------------------------------------------------
     # Process template
@@ -182,6 +180,10 @@ multi sub Concretize($command,
                     $ans.lc ∈ <false n/a no none null> ?? %syntax<False> !! %syntax<True>
                 }
                 when $_ ∈ <{_?StringQ..} {_String..}> {
+                    # Tried massaging the LLM prompt of find-textual-answer in order to get JSON list.
+                    # Did not work. Hence, this ad hoc list of strings reconstruction.
+                    $ans = $ans.split(/ \h* ',' \h*/).map({ %syntax<double-quote> ~ $_ ~ %syntax<double-quote> })
+                            .join(', ');
                     "{ %syntax<left-list-bracket> }{ $ans }{ %syntax<right-list-bracket> }"
                 }
                 when $_ ∈ <{_?NumericQ..} {_?NumberQ..} {_Integer..} {_?IntegerQ..}> {
