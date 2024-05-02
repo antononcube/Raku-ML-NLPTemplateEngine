@@ -93,6 +93,71 @@ concretize($command, template => 'RandomTabularDataset', lang => 'Raku', llm => 
 
 ------
 
+## How it works?
+
+The following flowchart describes how the NLP Template Engine involves a series of steps for processing a computation
+specification and executing code to obtain results:
+
+```mermaid
+flowchart TD
+  spec[/Computation spec/] --> workSpecQ{"Is workflow type<br>specified?"}
+  workSpecQ --> |No| guess[[Guess relevant<br>workflow type]]
+  workSpecQ -->|Yes| raw[Get raw answers]
+  guess -.- classifier[[Classifier:<br>text to workflow type]]
+  guess --> raw
+  raw --> process[Process raw answers]
+  process --> template[Complete<br>computation<br>template]
+  template --> execute[/Executable code/]
+  execute --> results[/Computation results/]
+
+  llm{{LLM}} -.- find[[find-textual-answer]]
+  llm -.- classifier
+  subgraph LLM-based functionalities
+    classifier
+    find
+  end
+
+  find --> raw
+  raw --> find
+  template -.- compData[(Computation<br>templates<br>data)]
+  compData -.- process
+
+  classDef highlighted fill:Salmon,stroke:Coral,stroke-width:2px;
+  class spec,results highlighted
+```
+
+Here's a detailed narration of the process:
+
+1. **Computation Specification**:
+    - The process begins with a "Computation spec", which is the initial input defining the requirements or parameters
+      for the computation task.
+
+2. **Workflow Type Decision**:
+    - A decision node asks if the workflow type is specified.
+
+3. **Guess Workflow Type**:
+    - If the workflow type is not specified, the system utilizes a classifier to guess relevant workflow type.
+
+4. **Raw Answers**:
+    - Regardless of how the workflow type is determined (directly specified or guessed), the system retrieves "raw
+      answers", crucial for further processing.
+
+5. **Processing and Templating**:
+    - The raw answers undergo processing ("Process raw answers") to organize or refine the data into a usable format.
+    - Processed data is then utilized to "Complete computation template", preparing for executable operations.
+
+6. **Executable Code and Results**:
+    - The computation template is transformed into "Executable code", which when run, produces the final "Computation
+      results".
+
+7. **LLM-Based Functionalities**:
+    - The classifier and the answers finder are LLM-based.
+
+8. **Data and Templates**:
+    - Code templates are selected based on the specifics of the initial spec and the processed data.
+
+------
+
 ## Bring your own templates
 
 **0.** Load the NLP-Template-Engine package (and others):

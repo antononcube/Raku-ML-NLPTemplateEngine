@@ -71,8 +71,8 @@ concretize($qrCommand);
 # QRMonUnit[dfTempBoston]⟹
 # QRMonEchoDataSummary[]⟹
 # QRMonQuantileRegression[N/A, {0.4, 0.6}, InterpolationOrder->2]⟹
-# QRMonPlot["DateListPlot"->False,PlotTheme->"Detailed"]⟹
-# QRMonErrorPlots["RelativeErrors"->False,"DateListPlot"->False,PlotTheme->"Detailed"];
+# QRMonPlot["DateListPlot"->True,PlotTheme->"Detailed"]⟹
+# QRMonErrorPlots["RelativeErrors"->False,"DateListPlot"->True,PlotTheme->"Detailed"];
 ```
 
 **Remark:** In the code above the template type, "QuantileRegression", was determined using an LLM-based classifier.
@@ -90,12 +90,12 @@ concretize($lsaCommand, template => 'LatentSemanticAnalysis', lang => 'R');
 
 ```
 # lsaObj <-
-# LSAMonUnit(Abstracts) %>%
+# LSAMonUnit(aAbstracts) %>%
 # LSAMonMakeDocumentTermMatrix(stemWordsQ = FALSE, stopWords = $*stopWords) %>%
 # LSAMonEchoDocumentTermMatrixStatistics(logBase = 10) %>%
 # LSAMonApplyTermWeightFunctions(globalWeightFunction = "$*globalWeightFunction", localWeightFunction = "$*localWeightFunction", normalizerFunction = "$*normalizerFunction") %>%
 # LSAMonExtractTopics(numberOfTopics = 20, method = "NNMF", maxSteps = $*maxSteps, minNumberOfDocumentsPerTerm = $*minNumberOfDocumentsPerTerm) %>%
-# LSAMonEchoTopicsTable(numberOfTerms = TRUE, wideFormQ = TRUE) %>%
+# LSAMonEchoTopicsTable(numberOfTerms = FALSE, wideFormQ = TRUE) %>%
 # LSAMonEchoStatisticalThesaurus(words = c("neural", "function", "notebook"))
 ```
 
@@ -110,10 +110,75 @@ concretize($command, template => 'RandomTabularDataset', lang => 'Raku', llm => 
 ```
 
 ```
-# random-tabular-dataset(6, 4, "column-names-generator" => <A1 B2 C3 D4>, "form" => "Table", "max-number-of-values" => 24, "min-number-of-values" => 24, "row-names" => $*rowKeys)
+# random-tabular-dataset(6, 4, "column-names-generator" => <A1, B2, C3, D4>, "form" => "Random table", "max-number-of-values" => 24, "min-number-of-values" => 24, "row-names" => $*rowKeys)
 ```
 
 **Remark:** In the code above it was specified to use Google's Gemini LLM service.
+
+------
+
+## How it works?
+
+The following flowchart describes how the NLP Template Engine involves a series of steps for processing a computation
+specification and executing code to obtain results:
+
+```mermaid
+flowchart TD
+  spec[/Computation spec/] --> workSpecQ{"Is workflow type<br>specified?"}
+  workSpecQ --> |No| guess[[Guess relevant<br>workflow type]]
+  workSpecQ -->|Yes| raw[Get raw answers]
+  guess -.- classifier[[Classifier:<br>text to workflow type]]
+  guess --> raw
+  raw --> process[Process raw answers]
+  process --> template[Complete<br>computation<br>template]
+  template --> execute[/Executable code/]
+  execute --> results[/Computation results/]
+
+  llm{{LLM}} -.- find[[find-textual-answer]]
+  llm -.- classifier
+  subgraph LLM-based functionalities
+    classifier
+    find
+  end
+
+  find --> raw
+  raw --> find
+  template -.- compData[(Computation<br>templates<br>data)]
+  compData -.- process
+
+  classDef highlighted fill:Salmon,stroke:Coral,stroke-width:2px;
+  class spec,results highlighted
+```
+
+Here's a detailed narration of the process:
+
+1. **Computation Specification**:
+    - The process begins with a "Computation spec", which is the initial input defining the requirements or parameters
+      for the computation task.
+
+2. **Workflow Type Decision**:
+    - A decision node asks if the workflow type is specified.
+
+3. **Guess Workflow Type**:
+    - If the workflow type is not specified, the system utilizes a classifier to guess relevant workflow type.
+
+4. **Raw Answers**:
+    - Regardless of how the workflow type is determined (directly specified or guessed), the system retrieves "raw
+      answers", crucial for further processing.
+
+5. **Processing and Templating**:
+    - The raw answers undergo processing ("Process raw answers") to organize or refine the data into a usable format.
+    - Processed data is then utilized to "Complete computation template", preparing for executable operations.
+
+6. **Executable Code and Results**:
+    - The computation template is transformed into "Executable code", which when run, produces the final "Computation
+      results".
+
+7. **LLM-Based Functionalities**:
+    - The classifier and the answers finder are LLM-based.
+
+8. **Data and Templates**:
+    - Code templates are selected based on the specifics of the initial spec and the processed data.
 
 ------
 
@@ -142,18 +207,18 @@ records-summary(@dsSendMail, field-names => <DataType WorkflowType Group Key Val
 ```
 
 ```
-# +-----------------+----------------+--------------------------------+----------------------------+----------------------------------------------------------------------------------+
-# | DataType        | WorkflowType   | Group                          | Key                        | Value                                                                            |
-# +-----------------+----------------+--------------------------------+----------------------------+----------------------------------------------------------------------------------+
-# | Questions => 48 | SendMail => 60 | All                      => 9  | ContextWordsToRemove => 12 | 0.35                                                                       => 9  |
-# | Defaults  => 7  |                | Who to send the email to => 4  | Parameter            => 12 | {_String..}                                                                => 8  |
-# | Templates => 3  |                | Who the email is from    => 4  | Threshold            => 12 | {"to", "email", "mail", "send", "it", "recipient", "addressee", "address"} => 4  |
-# | Shortcuts => 2  |                | What subject             => 4  | TypePattern          => 12 | to                                                                         => 4  |
-# |                 |                | Who to send it to        => 4  | Template             => 3  | None                                                                       => 4  |
-# |                 |                | Who is it from           => 4  | SendMail             => 1  | _String                                                                    => 4  |
-# |                 |                | What it the body         => 4  | Emailing             => 1  | body                                                                       => 3  |
-# |                 |                | (Other)                  => 27 | (Other)              => 7  | (Other)                                                                    => 24 |
-# +-----------------+----------------+--------------------------------+----------------------------+----------------------------------------------------------------------------------+
+# +-----------------+----------------+-----------------------------+----------------------------+----------------------------------------------------------------------------------+
+# | DataType        | WorkflowType   | Group                       | Key                        | Value                                                                            |
+# +-----------------+----------------+-----------------------------+----------------------------+----------------------------------------------------------------------------------+
+# | Questions => 48 | SendMail => 60 | All                   => 9  | TypePattern          => 12 | 0.35                                                                       => 9  |
+# | Defaults  => 7  |                | What subject          => 4  | Parameter            => 12 | {_String..}                                                                => 8  |
+# | Templates => 3  |                | Which email address   => 4  | Threshold            => 12 | {"to", "email", "mail", "send", "it", "recipient", "addressee", "address"} => 4  |
+# | Shortcuts => 2  |                | Who is the receiver   => 4  | ContextWordsToRemove => 12 | to                                                                         => 4  |
+# |                 |                | Who to send it to     => 4  | Template             => 3  | None                                                                       => 4  |
+# |                 |                | Who is it from        => 4  | from                 => 1  | _String                                                                    => 4  |
+# |                 |                | Who the email is from => 4  | SendMail             => 1  | {"content", "body"}                                                        => 3  |
+# |                 |                | (Other)               => 27 | (Other)              => 7  | (Other)                                                                    => 24 |
+# +-----------------+----------------+-----------------------------+----------------------------+----------------------------------------------------------------------------------+
 ```
 
 **2.** Add the ingested data for the new workflow (from the CSV file) into the NLP-Template-Engine:
@@ -163,7 +228,7 @@ add-template-data(@dsSendMail);
 ```
 
 ```
-# (Defaults ParameterQuestions Shortcuts Questions ParameterTypePatterns Templates)
+# (Defaults ParameterTypePatterns Templates ParameterQuestions Questions Shortcuts)
 ```
 
 **3.** Parse natural language specification with the newly ingested and onboarded workflow ("SendMail"):
@@ -174,7 +239,7 @@ add-template-data(@dsSendMail);
 ```
 
 ```
-# SendMail[<|"To"->{"joedoe@gmail.com"},"Subject"->"this is a random real call","Body"->N/A,"AttachedFiles"->`attachedFiles`|>]
+# SendMail[<|"To"->{"joedoe@gmail.com"},"Subject"->"this is a random real call","Body"->RandomReal[343],"AttachedFiles"->`attachedFiles`|>]
 ```
 
 **4.** Experiment with running the generated code!
