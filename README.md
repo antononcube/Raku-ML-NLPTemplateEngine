@@ -70,9 +70,9 @@ concretize($qrCommand);
 # qrObj=
 # QRMonUnit[dfTempBoston]⟹
 # QRMonEchoDataSummary[]⟹
-# QRMonQuantileRegression[N/A, 0.4, 0.6, InterpolationOrder->2]⟹
-# QRMonPlot["DateListPlot"-> N/A,PlotTheme->"Detailed"]⟹
-# QRMonErrorPlots["RelativeErrors"->N/A,"DateListPlot"-> N/A,PlotTheme->"Detailed"];
+# QRMonQuantileRegression[N/A, {0.4, 0.6}, InterpolationOrder->2]⟹
+# QRMonPlot["DateListPlot"->False,PlotTheme->"Detailed"]⟹
+# QRMonErrorPlots["RelativeErrors"->False,"DateListPlot"->False,PlotTheme->"Detailed"];
 ```
 
 **Remark:** In the code above the template type, "QuantileRegression", was determined using an LLM-based classifier.
@@ -90,13 +90,13 @@ concretize($lsaCommand, template => 'LatentSemanticAnalysis', lang => 'R');
 
 ```
 # lsaObj <-
-# LSAMonUnit(aAbstracts) %>%
-# LSAMonMakeDocumentTermMatrix(stemWordsQ = No, stopWords = $*stopWords) %>%
+# LSAMonUnit(Abstracts) %>%
+# LSAMonMakeDocumentTermMatrix(stemWordsQ = FALSE, stopWords = $*stopWords) %>%
 # LSAMonEchoDocumentTermMatrixStatistics(logBase = 10) %>%
 # LSAMonApplyTermWeightFunctions(globalWeightFunction = "$*globalWeightFunction", localWeightFunction = "$*localWeightFunction", normalizerFunction = "$*normalizerFunction") %>%
 # LSAMonExtractTopics(numberOfTopics = 20, method = "NNMF", maxSteps = $*maxSteps, minNumberOfDocumentsPerTerm = $*minNumberOfDocumentsPerTerm) %>%
-# LSAMonEchoTopicsTable(numberOfTerms = 20, wideFormQ = TRUE) %>%
-# LSAMonEchoStatisticalThesaurus(words = neural, function, notebook)
+# LSAMonEchoTopicsTable(numberOfTerms = TRUE, wideFormQ = TRUE) %>%
+# LSAMonEchoStatisticalThesaurus(words = c("neural", "function", "notebook"))
 ```
 
 ### Random tabular data generation (Raku)
@@ -110,7 +110,7 @@ concretize($command, template => 'RandomTabularDataset', lang => 'Raku', llm => 
 ```
 
 ```
-# random-tabular-dataset(6, 4, "column-names-generator" => Letters and numbers combination, "form" => "Table with 6 rows and 4 columns", "max-number-of-values" => 24, "min-number-of-values" => 4, "row-names" => $*rowKeys)
+# random-tabular-dataset(6, 4, "column-names-generator" => <A1 B2 C3 D4>, "form" => "Table", "max-number-of-values" => 24, "min-number-of-values" => 24, "row-names" => $*rowKeys)
 ```
 
 **Remark:** In the code above it was specified to use Google's Gemini LLM service.
@@ -142,18 +142,18 @@ records-summary(@dsSendMail, field-names => <DataType WorkflowType Group Key Val
 ```
 
 ```
-# +-----------------+----------------+-----------------------------+----------------------------+----------------------------------------------------------------------------------+
-# | DataType        | WorkflowType   | Group                       | Key                        | Value                                                                            |
-# +-----------------+----------------+-----------------------------+----------------------------+----------------------------------------------------------------------------------+
-# | Questions => 48 | SendMail => 60 | All                   => 9  | ContextWordsToRemove => 12 | 0.35                                                                       => 9  |
-# | Defaults  => 7  |                | Which files to attach => 4  | Threshold            => 12 | {_String..}                                                                => 8  |
-# | Templates => 3  |                | What it the content   => 4  | TypePattern          => 12 | {"to", "email", "mail", "send", "it", "recipient", "addressee", "address"} => 4  |
-# | Shortcuts => 2  |                | Who to send it to     => 4  | Parameter            => 12 | _String                                                                    => 4  |
-# |                 |                | Who is it from        => 4  | Template             => 3  | None                                                                       => 4  |
-# |                 |                | Who the email is from => 4  | body                 => 1  | to                                                                         => 4  |
-# |                 |                | Which api key         => 4  | bodyHTML             => 1  | body                                                                       => 3  |
-# |                 |                | (Other)               => 27 | (Other)              => 7  | (Other)                                                                    => 24 |
-# +-----------------+----------------+-----------------------------+----------------------------+----------------------------------------------------------------------------------+
+# +-----------------+----------------+--------------------------------+----------------------------+----------------------------------------------------------------------------------+
+# | DataType        | WorkflowType   | Group                          | Key                        | Value                                                                            |
+# +-----------------+----------------+--------------------------------+----------------------------+----------------------------------------------------------------------------------+
+# | Questions => 48 | SendMail => 60 | All                      => 9  | ContextWordsToRemove => 12 | 0.35                                                                       => 9  |
+# | Defaults  => 7  |                | Who to send the email to => 4  | Parameter            => 12 | {_String..}                                                                => 8  |
+# | Templates => 3  |                | Who the email is from    => 4  | Threshold            => 12 | {"to", "email", "mail", "send", "it", "recipient", "addressee", "address"} => 4  |
+# | Shortcuts => 2  |                | What subject             => 4  | TypePattern          => 12 | to                                                                         => 4  |
+# |                 |                | Who to send it to        => 4  | Template             => 3  | None                                                                       => 4  |
+# |                 |                | Who is it from           => 4  | SendMail             => 1  | _String                                                                    => 4  |
+# |                 |                | What it the body         => 4  | Emailing             => 1  | body                                                                       => 3  |
+# |                 |                | (Other)                  => 27 | (Other)              => 7  | (Other)                                                                    => 24 |
+# +-----------------+----------------+--------------------------------+----------------------------+----------------------------------------------------------------------------------+
 ```
 
 **2.** Add the ingested data for the new workflow (from the CSV file) into the NLP-Template-Engine:
@@ -163,7 +163,7 @@ add-template-data(@dsSendMail);
 ```
 
 ```
-# (Templates ParameterQuestions Defaults Questions Shortcuts)
+# (Defaults ParameterQuestions Shortcuts Questions ParameterTypePatterns Templates)
 ```
 
 **3.** Parse natural language specification with the newly ingested and onboarded workflow ("SendMail"):
@@ -174,7 +174,7 @@ add-template-data(@dsSendMail);
 ```
 
 ```
-# SendMail[<|"To"->joedoe@gmail.com,"Subject"->"this is a random real call.","Body"->RandomReal[343],"AttachedFiles"->`attachedFiles`|>]
+# SendMail[<|"To"->{"joedoe@gmail.com"},"Subject"->"this is a random real call","Body"->N/A,"AttachedFiles"->`attachedFiles`|>]
 ```
 
 **4.** Experiment with running the generated code!
