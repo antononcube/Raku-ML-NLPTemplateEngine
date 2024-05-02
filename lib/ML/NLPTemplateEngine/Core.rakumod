@@ -141,6 +141,28 @@ multi sub Concretize($command,
     #------------------------------------------------------
     # Remove residual words
     #------------------------------------------------------
+    # Not needed because LLNs produce "precise" answers most of the time.
+
+    #------------------------------------------------------
+    # Localization
+    #------------------------------------------------------
+    # Different programming languages have different syntax for lists, strings, etc.
+    # The alternative is to generate JSON answers with QAS and then localize those JSONs.
+    # But that still requires per-language translation step.
+
+    my %syntax =
+            python => %(Automatic => 'None', True => 'True', False => 'False', left-list-bracket => '[',
+                        right-list-bracket => ']'),
+            r => %(Automatic => 'NULL', True => 'TRUE', False => 'FALSE', left-list-bracket => 'c(',
+                   right-list-bracket => ')'),
+            raku => %(Automatic => 'Whatever', True => 'True', False => 'False', left-list-bracket => '[',
+                      right-list-bracket => ']'),
+            wl => %(Automatic => 'Automatic', True => 'True', False => 'False', left-list-bracket => '{',
+                    right-list-bracket => '}');
+
+    %syntax = %syntax{$lang.lc} // %syntax<raku>;
+
+    note (syntax => %syntax.raku);
 
     #------------------------------------------------------
     # Process template
@@ -157,13 +179,13 @@ multi sub Concretize($command,
 
             my $ans2 = do given %paramTypePatterns{$param} {
                 when $_ ∈ <_?BooleanQ Bool> {
-                    $ans.lc ∈ <false n/a no none null> ?? 'False' !! 'True'
+                    $ans.lc ∈ <false n/a no none null> ?? %syntax<False> !! %syntax<True>
                 }
                 when $_ ∈ <{_?StringQ..} {_String..}> {
-                    "[$ans]"
+                    "{ %syntax<left-list-bracket> }{ $ans }{ %syntax<right-list-bracket> }"
                 }
                 when $_ ∈ <{_?NumericQ..} {_?NumberQ..} {_Integer..} {_?IntegerQ..}> {
-                    "[$ans]"
+                    "{ %syntax<left-list-bracket> }{ $ans }{ %syntax<right-list-bracket> }"
                 }
                 default {
                     $ans
