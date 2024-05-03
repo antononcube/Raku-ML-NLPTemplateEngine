@@ -144,7 +144,7 @@
 "Questions","LatentSemanticAnalysis","Show topics table","TypePattern","_?BooleanQ"
 "Questions","LatentSemanticAnalysis","Show topics table","Threshold",0.75
 "Questions","LatentSemanticAnalysis","Show topics table","Parameter","showTopicsTableQ"
-"Questions","LatentSemanticAnalysis","Number of terms in the topics table","TypePattern","_?BooleanQ"
+"Questions","LatentSemanticAnalysis","Number of terms in the topics table","TypePattern","_?IntegerQ"
 "Questions","LatentSemanticAnalysis","Number of terms in the topics table","Threshold",0.75
 "Questions","LatentSemanticAnalysis","Number of terms in the topics table","Parameter","topicsTableNumberOfTerms"
 "Questions","LatentSemanticAnalysis","Which words to use for statistical thesaurus","TypePattern","{_String..}"
