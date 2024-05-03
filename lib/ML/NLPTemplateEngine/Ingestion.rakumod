@@ -135,6 +135,10 @@ multi sub ConvertCSVDataForType(@dsTESpecs, Str $dataType where *eq "Templates")
     return %res;
 }
 
+sub just-value(%h where %h.values.all ~~ Positional) {
+    return %h.map({ $_.key => $_.value.head<Value>.join(', ') }).Hash;
+}
+
 multi sub ConvertCSVDataForType(@dsTESpecs, Str $dataType where *eq "Defaults") {
 
     my @dsQuery = @dsTESpecs.grep({ $_<DataType> eq $dataType });
@@ -148,10 +152,11 @@ multi sub ConvertCSVDataForType(@dsTESpecs, Str $dataType where *eq "Defaults") 
         [
             $_<DataType>,
             $_<WorkflowType>,
-            $_<Key>,
-            $_<Value>
+            $_<Key>
         ]
     }, @dsQuery);
+
+    %res = %res.duckmap(&just-value);
 
     return %res;
 }
