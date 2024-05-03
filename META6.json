@@ -11,7 +11,8 @@
     "ML::FindTextualAnswer:ver<0.2.4+>",
     "Data::TypeSystem:ver<0.1.2+>",
     "Hash::Merge:ver<2.0.0+>:api<2+>",
-    "Text::CSV:ver<0.010+>"
+    "Text::CSV:ver<0.010+>",
+    "Hash::Merge:ver<2.0.0+>:api<2+>"
   ],
   "build-depends": [],
   "test-depends": [],
