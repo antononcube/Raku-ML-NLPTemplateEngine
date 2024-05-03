@@ -12,7 +12,7 @@ The current version of the NLP-TE of the package heavily relies on Large Languag
 
 Future plans involve incorporating other types of QAS implementations.
 
-The Raku package implementation close follows the Wolfram Language (WL) implementations in
+The Raku package implementation closely follows the Wolfram Language (WL) implementations in
 ["NLP Template Engine"](https://github.com/antononcube/NLP-Template-Engine), [AAr1, AAv1],
 and the WL paclet
 ["NLPTemplateEngine"](https://resources.wolframcloud.com/PacletRepository/resources/AntonAntonov/NLPTemplateEngine/), [AAp2, AAv2].
