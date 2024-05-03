@@ -175,9 +175,18 @@ multi sub Concretize($command,
         for %questionToParam.kv -> $k, $param {
             my $ans = %answers{$k ~ '?'};
 
+            if $ans.lc ∈ <n/a none null> {
+                $ans = get-specs<Defaults>{$template}{$param};
+                # note (:$param, :$ans, type => %paramTypePatterns{$param});
+            }
+
             my $ans2 = do given %paramTypePatterns{$param} {
                 when $_ ∈ <_?BooleanQ Bool> {
-                    $ans.lc ∈ <false n/a no none null> ?? %syntax<False> !! %syntax<True>
+                    given $ans.lc {
+                        when $_ ∈ <false n/a no none null> { %syntax<False> }
+                        when $_ ∈ <automatic auto whatever> { $ans }
+                        default { %syntax<True> }
+                    }
                 }
                 when $_ ∈ <{_?StringQ..} {_String..}> {
                     # Tried massaging the LLM prompt of find-textual-answer in order to get JSON list.
