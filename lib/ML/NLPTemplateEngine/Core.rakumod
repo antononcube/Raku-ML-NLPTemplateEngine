@@ -1,9 +1,8 @@
-use v6.d;
+unit module ML::NLPTemplateEngine::Core;
 
 use ML::FindTextualAnswer;
 use ML::NLPTemplateEngine::Ingestion;
-
-unit module ML::NLPTemplateEngine::Core;
+use Hash::Merge;
 
 #===========================================================
 # Specs
@@ -170,15 +169,25 @@ multi sub Concretize($command,
 
         my %answers = |$ans;
 
-        my $tmplFilledIn = $tmpl2;
-
-        for %questionToParam.kv -> $k, $param {
+        # Get parameter-to-answer mapping
+        my %paramToAnswer = do for %questionToParam.kv -> $k, $param {
             my $ans = %answers{$k ~ '?'};
 
             if $ans.lc ∈ <n/a none null> {
-                $ans = get-specs<Defaults>{$template}{$param};
-                # note (:$param, :$ans, type => %paramTypePatterns{$param});
+                $ans = get-specs<Defaults>{$template}{$param} // ('$*' ~ $param);
             }
+
+            $param => $ans
+        }
+
+        # Complete the answers with defaults
+        %paramToAnswer = merge-hash(get-specs<Defaults>{$template}, %paramToAnswer);
+
+        # Get template
+        my $tmplFilledIn = $tmpl2;
+
+        # Loop over param-to-answer
+        for %paramToAnswer.kv -> $param, $ans {
 
             my $ans2 = do given %paramTypePatterns{$param} {
                 when $_ ∈ <_?BooleanQ Bool> {
@@ -191,9 +200,9 @@ multi sub Concretize($command,
                 when $_ ∈ <{_?StringQ..} {_String..}> {
                     # Tried massaging the LLM prompt of find-textual-answer in order to get JSON list.
                     # Did not work. Hence, this ad hoc list of strings reconstruction.
-                    $ans = $ans.split(/ \h* ',' \h*/).map({ %syntax<double-quote> ~ $_ ~ %syntax<double-quote> })
+                    my $ansMod = $ans.split(/ \h* ',' \h*/).map({ %syntax<double-quote> ~ $_ ~ %syntax<double-quote> })
                             .join(', ');
-                    "{ %syntax<left-list-bracket> }{ $ans }{ %syntax<right-list-bracket> }"
+                    "{ %syntax<left-list-bracket> }{ $ansMod }{ %syntax<right-list-bracket> }"
                 }
                 when $_ ∈ <{_?NumericQ..} {_?NumberQ..} {_Integer..} {_?IntegerQ..}> {
                     "{ %syntax<left-list-bracket> }{ $ans }{ %syntax<right-list-bracket> }"
@@ -208,6 +217,7 @@ multi sub Concretize($command,
             $tmplFilledIn .= subst(/ '$*' $param /, $ans2):g;
         }
 
+        # Final template adjustments
         $tmplFilledIn .= subst(/ ^ 'TemplateObject[{"'/, '');
         $tmplFilledIn .= subst(
                 / '"},' \h* 'CombinerFunction -> StringJoin' \h* ',' \h* 'InsertionFunction -> TextString]' $ /, '');
