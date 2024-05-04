@@ -1,7 +1,7 @@
 {
   "name": "ML::NLPTemplateEngine",
   "description": "ML::NLPTemplateEngine provides function(s) for making computational workflows.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "perl": "6.d",
   "authors": [
     "Anton Antonov"
