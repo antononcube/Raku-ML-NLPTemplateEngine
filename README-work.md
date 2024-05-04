@@ -1,6 +1,6 @@
 # ML::NLPTemplateEngine
 
-A Raku package is available that provides an NLP template engine to create various computational workflows.
+This Raku package aims to create (nearly) executable code for various computational workflows.
 
 Package's data and implementation make a Natural Language Processing (NLP)
 [Template Engine (TE)](https://en.wikipedia.org/wiki/Template_processor), [Wk1],
@@ -31,6 +31,13 @@ We want to have a system (i.e. TE) that:
 3. Can generate code for different programming languages and related software packages
 
 The points above are given in order of importance; the most important are placed first.
+
+### Reliability of results
+
+One of the main reasons to re-implement the WL NLP-TE, [AAr1, AAp1], into Raku is to have a more robust way
+of utilizing LLMs to generate code. That goal is more or less achieved with this package, but
+YMMV -- if incomplete or wrong results are obtained run the NLP-TE with different LLM parameter settings
+or different LLMs.
 
 ------
 
@@ -192,6 +199,29 @@ add-template-data(@dsSendMail);
 ```
 
 **4.** Experiment with running the generated code!
+
+------
+
+## TODO
+
+- [ ] Templates data
+    - [ ] Using JSON instead of CSV format for the templates
+        - [ ] Derive suitable data structure
+        - [ ] Implement export to JSON
+        - [ ] Implement ingestion
+    - [ ] Review wrong parameter type specifications
+        - A few were found.
+    - [ ] New workflows
+        - [ ] LLM-workflows
+        - [ ] Clustering
+        - [ ] Associative rule learning
+- [ ] Unit tests
+    - What are good ./t unit tests?
+    - [ ] Make ingestion ./t unit tests
+    - [ ] Make suitable ./xt unit tests
+- [ ] Documentation
+    - [ ] Comparison with LLM code generation using few-shot examples
+    - [ ] Video demonstrating the functionalities
 
 ------
 

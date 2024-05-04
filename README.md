@@ -1,6 +1,6 @@
 # ML::NLPTemplateEngine
 
-A Raku package is available that provides an NLP template engine to create various computational workflows.
+This Raku package aims to create (nearly) executable code for various computational workflows.
 
 Package's data and implementation make a Natural Language Processing (NLP)
 [Template Engine (TE)](https://en.wikipedia.org/wiki/Template_processor), [Wk1],
@@ -31,6 +31,13 @@ We want to have a system (i.e. TE) that:
 3. Can generate code for different programming languages and related software packages
 
 The points above are given in order of importance; the most important are placed first.
+
+### Reliability of results
+
+One of the main reasons to re-implement the WL NLP-TE, [AAr1, AAp1], into Raku is to have a more robust way
+of utilizing LLMs to generate code. That goal is more or less achieved with this package, but
+YMMV -- if incomplete or wrong results are obtained run the NLP-TE with different LLM parameter settings
+or different LLMs.
 
 ------
 
@@ -68,9 +75,9 @@ concretize($qrCommand);
 
 ```
 # qrObj=
-# QRMonUnit[dfTempBoston]⟹
+# QRMonUnit[Dataset dfTempBoston]⟹
 # QRMonEchoDataSummary[]⟹
-# QRMonQuantileRegression[N/A, {0.4, 0.6}, InterpolationOrder->2]⟹
+# QRMonQuantileRegression[12, {0.4, 0.6}, InterpolationOrder->2]⟹
 # QRMonPlot["DateListPlot"->True,PlotTheme->"Detailed"]⟹
 # QRMonErrorPlots["RelativeErrors"->False,"DateListPlot"->True,PlotTheme->"Detailed"];
 ```
@@ -91,11 +98,11 @@ concretize($lsaCommand, template => 'LatentSemanticAnalysis', lang => 'R');
 ```
 # lsaObj <-
 # LSAMonUnit(aAbstracts) %>%
-# LSAMonMakeDocumentTermMatrix(stemWordsQ = FALSE, stopWords = $*stopWords) %>%
+# LSAMonMakeDocumentTermMatrix(stemWordsQ = Automatic, stopWords = Automatic) %>%
 # LSAMonEchoDocumentTermMatrixStatistics(logBase = 10) %>%
-# LSAMonApplyTermWeightFunctions(globalWeightFunction = "$*globalWeightFunction", localWeightFunction = "$*localWeightFunction", normalizerFunction = "$*normalizerFunction") %>%
-# LSAMonExtractTopics(numberOfTopics = 20, method = "NNMF", maxSteps = $*maxSteps, minNumberOfDocumentsPerTerm = $*minNumberOfDocumentsPerTerm) %>%
-# LSAMonEchoTopicsTable(numberOfTerms = FALSE, wideFormQ = TRUE) %>%
+# LSAMonApplyTermWeightFunctions(globalWeightFunction = "IDF", localWeightFunction = "None", normalizerFunction = "Cosine") %>%
+# LSAMonExtractTopics(numberOfTopics = 20, method = "NNMF", maxSteps = 16, minNumberOfDocumentsPerTerm = 20) %>%
+# LSAMonEchoTopicsTable(numberOfTerms = 3, wideFormQ = TRUE) %>%
 # LSAMonEchoStatisticalThesaurus(words = c("neural", "function", "notebook"))
 ```
 
@@ -110,7 +117,7 @@ concretize($command, template => 'RandomTabularDataset', lang => 'Raku', llm => 
 ```
 
 ```
-# random-tabular-dataset(6, 4, "column-names-generator" => <A1, B2, C3, D4>, "form" => "Random table", "max-number-of-values" => 24, "min-number-of-values" => 24, "row-names" => $*rowKeys)
+# random-tabular-dataset(6, 4, "column-names-generator" => <A1, B2, C3, D4>, "form" => "Table", "max-number-of-values" => 24, "min-number-of-values" => 1, "row-names" => False)
 ```
 
 **Remark:** In the code above it was specified to use Google's Gemini LLM service.
@@ -210,13 +217,13 @@ records-summary(@dsSendMail, field-names => <DataType WorkflowType Group Key Val
 # +-----------------+----------------+-----------------------------+----------------------------+----------------------------------------------------------------------------------+
 # | DataType        | WorkflowType   | Group                       | Key                        | Value                                                                            |
 # +-----------------+----------------+-----------------------------+----------------------------+----------------------------------------------------------------------------------+
-# | Questions => 48 | SendMail => 60 | All                   => 9  | TypePattern          => 12 | 0.35                                                                       => 9  |
-# | Defaults  => 7  |                | What subject          => 4  | Parameter            => 12 | {_String..}                                                                => 8  |
-# | Templates => 3  |                | Which email address   => 4  | Threshold            => 12 | {"to", "email", "mail", "send", "it", "recipient", "addressee", "address"} => 4  |
-# | Shortcuts => 2  |                | Who is the receiver   => 4  | ContextWordsToRemove => 12 | to                                                                         => 4  |
-# |                 |                | Who to send it to     => 4  | Template             => 3  | None                                                                       => 4  |
-# |                 |                | Who is it from        => 4  | from                 => 1  | _String                                                                    => 4  |
-# |                 |                | Who the email is from => 4  | SendMail             => 1  | {"content", "body"}                                                        => 3  |
+# | Questions => 48 | SendMail => 60 | All                   => 9  | ContextWordsToRemove => 12 | 0.35                                                                       => 9  |
+# | Defaults  => 7  |                | Who the email is from => 4  | TypePattern          => 12 | {_String..}                                                                => 8  |
+# | Templates => 3  |                | Who to send it to     => 4  | Parameter            => 12 | {"to", "email", "mail", "send", "it", "recipient", "addressee", "address"} => 4  |
+# | Shortcuts => 2  |                | Which email address   => 4  | Threshold            => 12 | _String                                                                    => 4  |
+# |                 |                | What it the title     => 4  | Template             => 3  | to                                                                         => 4  |
+# |                 |                | What it the body      => 4  | bodyHTML             => 1  | None                                                                       => 4  |
+# |                 |                | Which files to attach => 4  | apiKey               => 1  | {"content", "body"}                                                        => 3  |
 # |                 |                | (Other)               => 27 | (Other)              => 7  | (Other)                                                                    => 24 |
 # +-----------------+----------------+-----------------------------+----------------------------+----------------------------------------------------------------------------------+
 ```
@@ -228,7 +235,7 @@ add-template-data(@dsSendMail);
 ```
 
 ```
-# (Defaults ParameterTypePatterns Templates ParameterQuestions Questions Shortcuts)
+# (Shortcuts Templates ParameterTypePatterns Questions Defaults ParameterQuestions)
 ```
 
 **3.** Parse natural language specification with the newly ingested and onboarded workflow ("SendMail"):
@@ -239,10 +246,33 @@ add-template-data(@dsSendMail);
 ```
 
 ```
-# SendMail[<|"To"->{"joedoe@gmail.com"},"Subject"->"this is a random real call","Body"->RandomReal[343],"AttachedFiles"->`attachedFiles`|>]
+# SendMail[<|"To"->{"joedoe@gmail.com"},"Subject"->"this is a random real call","Body"->RandomReal[343],"AttachedFiles"->None|>]
 ```
 
 **4.** Experiment with running the generated code!
+
+------
+
+## TODO
+
+- [ ] Templates data
+    - [ ] Using JSON instead of CSV format for the templates
+        - [ ] Derive suitable data structure
+        - [ ] Implement export to JSON
+        - [ ] Implement ingestion
+    - [ ] Review wrong parameter type specifications
+        - A few were found.
+    - [ ] New workflows
+        - [ ] LLM-workflows
+        - [ ] Clustering
+        - [ ] Associative rule learning
+- [ ] Unit tests
+    - What are good ./t unit tests?
+    - [ ] Make ingestion ./t unit tests
+    - [ ] Make suitable ./xt unit tests
+- [ ] Documentation
+    - [ ] Comparison with LLM code generation using few-shot examples
+    - [ ] Video demonstrating the functionalities
 
 ------
 
