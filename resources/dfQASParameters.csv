@@ -496,14 +496,21 @@ QRMonEchoDataSummary[]⟹
 QRMonQuantileRegression[$*knots, $*probs, InterpolationOrder->$*intOrder]⟹
 QRMonPlot[""DateListPlot""->$*dateListPlotQ,PlotTheme->""Detailed""]⟹
 QRMonErrorPlots[""RelativeErrors""->$*relativeErrorsQ,""DateListPlot""->$*dateListPlotQ,PlotTheme->""Detailed""];"
-"Templates","LatentSemanticAnalysis","Python","Template","print(""Example API -- no actual implementation !!!"")
-lsaObj = LSAMonUnit($*textData)
-lsaObj = LSAMonMakeDocumentTermMatrix(lsaObj, stemWordsQ = $*stemmingRules, stopWords = $*stopWords)
-LSAMonEchoDocumentTermMatrixStatistics(lsaObj, logBase = 10)
-lsaObj = LSAMonApplyTermWeightFunctions(lsaObj, globalWeightFunction = ""$*globalWeightFunction"", localWeightFunction = ""$*localWeightFunction"", normalizerFunction = ""$*normalizerFunction"")
-lsaObj = LSAMonExtractTopics(lsaObj, numberOfTopics = $*numberOfTopics, method = ""$*method"", maxSteps = $*maxSteps, minNumberOfDocumentsPerTerm = $*minNumberOfDocumentsPerTerm)
-LSAMonEchoTopicsTable(lsaObj, numberOfTerms = $*topicsTableNumberOfTerms, wideFormQ = TRUE)
-LSAMonEchoStatisticalThesaurus(lsaObj, words = $*statThesaurusWords)"
+"Templates","LatentSemanticAnalysis","Python","Template","lsaObj = (LatentSemanticAnalyzer()
+.make_document_term_matrix(docs=$*textData,
+                           stop_words=$*stopWords,
+                           stemming_rules=$*stemmingRules,
+                           min_length=3)
+.apply_term_weight_functions(global_weight_func=""$*globalWeightFunction"",
+						   local_weight_func=""$*localWeightFunction"",
+						   normalizer_func=""$*normalizerFunction"")
+.extract_topics(number_of_topics=$*numberOfTopics, min_number_of_documents_per_term=$*minNumberOfDocumentsPerTerm, method=""$*method"", max_steps = $*maxSteps)
+.echo_topics_interpretation(number_of_terms=$*topicsTableNumberOfTerms, wide_form=True)
+.echo_statistical_thesaurus(terms=stemmerObj.stemWords($*statThesaurusWords),
+						  wide_form=True,
+						  number_of_nearest_neighbors=12,
+						  method=""cosine"",
+						  echo_function=lambda x: print(x.to_string())))"
 "Templates","LatentSemanticAnalysis","R","Template","lsaObj <-
 LSAMonUnit($*textData) %>%
 LSAMonMakeDocumentTermMatrix(stemWordsQ = $*stemmingRules, stopWords = $*stopWords) %>%
