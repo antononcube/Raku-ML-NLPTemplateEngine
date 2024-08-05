@@ -37,8 +37,8 @@ my %workflowSpecToFullName =
         Recommendations => 'Recommendations',
         #SMRMon => 'Recommendations',
         QRMon => 'Quantile Regression',
-        RandomTabularDataset => 'RandomTabularDataset',
-        ProgrammingEnvironment => 'ProgrammingEnvironment';
+        RandomTabularDataset => 'Random Tabular Dataset',
+        ProgrammingEnvironment => 'Programming Environment';
 
 my %workflowFullNameToSpec = %workflowSpecToFullName.pairs.classify({ $_.value }).map({ $_.key => $_.value>>.key });
 
@@ -53,7 +53,7 @@ multi sub Concretize($command,
                      *%args)
 {
 
-    my @lbls = %workflowSpecToFullName.values.unique;
+    my @lbls = %workflowSpecToFullName.values.unique.grep({ $_ ∉ ['Programming Environment'] });
 
     my %args2 = { request => 'which of these workflows characterizes it' }, %args;
     $template = llm-classify($command, @lbls, |%args2);
