@@ -482,7 +482,7 @@ Map[{#[[1]], (qFunc[#[[1]]] - #[[2]])/#[[2]]} &, qrData], Joined -> False, PlotR
 qrObj = (Regressionizer($*dataset)
 .echo_data_summary()
 .quantile_regression(knots = $*knots, probs = $*probs, order = $*intOrder)
-.plot(date_plot = $*dateListPlotQ )
+.plot(date_plot = $*dateListPlotQ)
 .errors_plot(relative_errors = $*relativeErrorsQ, date_plot = $*dateListPlotQ))"
 "Templates","QRMon","R","Template","qrObj <-
 QRMonUnit($*dataset) %>%
