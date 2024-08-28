@@ -1,0 +1,29 @@
+#!/usr/bin/env raku
+
+use ML::NLPTemplateEngine;
+use Clipboard;
+
+my %*SUB-MAIN-OPTS = :named-anywhere;
+
+
+sub MAIN(
+        *@words where @words > 0,                          #= Strings to be evaluated
+        Str :t(:$template) = 'Whatever',                   #= Template to use.
+        Str :l(:$lang) = 'R',                              #= Template's language.
+        Str :c(:$clipboard-command) is copy = 'Whatever',  #= Clipboard command to use.
+        *%args,                                            #= Additional arguments for &ML::FindTextualAnswer::find-textual-answer.
+         ) {
+
+    my $template2 = $template;
+    if $template.lc ∈ <whatever auto automatic any> { $template2 = Whatever }
+
+    my $res = do if @words.elems == 1 && @words[0] eq '-' {
+        concretize($*IN.slurp, template => $template2, :$lang, |%args);
+    } else {
+        concretize(@words.join(' '), template => $template2, :$lang, |%args);
+    }
+
+    say $res;
+
+    copy-to-clipboard($res, :$clipboard-command);
+}
