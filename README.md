@@ -75,7 +75,7 @@ concretize($qrCommand);
 
 ```
 # qrObj=
-# QRMonUnit[Dataset dfTempBoston]⟹
+# QRMonUnit[dfTempBoston]⟹
 # QRMonEchoDataSummary[]⟹
 # QRMonQuantileRegression[12, {0.4, 0.6}, InterpolationOrder->2]⟹
 # QRMonPlot["DateListPlot"->True,PlotTheme->"Detailed"]⟹
@@ -102,7 +102,7 @@ concretize($lsaCommand, template => 'LatentSemanticAnalysis', lang => 'R');
 # LSAMonEchoDocumentTermMatrixStatistics(logBase = 10) %>%
 # LSAMonApplyTermWeightFunctions(globalWeightFunction = "IDF", localWeightFunction = "None", normalizerFunction = "Cosine") %>%
 # LSAMonExtractTopics(numberOfTopics = 20, method = "NNMF", maxSteps = 16, minNumberOfDocumentsPerTerm = 20) %>%
-# LSAMonEchoTopicsTable(numberOfTerms = 3, wideFormQ = TRUE) %>%
+# LSAMonEchoTopicsTable(numberOfTerms = 10, wideFormQ = TRUE) %>%
 # LSAMonEchoStatisticalThesaurus(words = c("neural", "function", "notebook"))
 ```
 
@@ -117,10 +117,30 @@ concretize($command, template => 'RandomTabularDataset', lang => 'Raku', llm => 
 ```
 
 ```
-# random-tabular-dataset(6, 4, "column-names-generator" => <A1, B2, C3, D4>, "form" => "Table", "max-number-of-values" => 24, "min-number-of-values" => 1, "row-names" => False)
+# random-tabular-dataset(6, 4, "column-names-generator" => <A1 B2 C3 D4>, "form" => "Table", "max-number-of-values" => 24, "min-number-of-values" => 24, "row-names" => False)
 ```
 
 **Remark:** In the code above it was specified to use Google's Gemini LLM service.
+
+------
+
+## CLI
+
+The package provides the Command Line Interface (CLI) script `concretize`. Here is usage note:
+
+```shell
+concretize --help
+```
+
+```
+# Usage:
+#   concretize [<words> ...] [-t|--template=<Str>] [-l|--to|--lang=<Str>] [-c|--clipboard-command=<Str>] [--<args>=...]
+#   
+#     -t|--template=<Str>             Template to use. [default: 'Whatever']
+#     -l|--to|--lang=<Str>            Template's language. [default: 'R']
+#     -c|--clipboard-command=<Str>    Clipboard command to use. [default: 'Whatever']
+#     --<args>=...                    Additional arguments for &ML::FindTextualAnswer::find-textual-answer.
+```
 
 ------
 
@@ -217,13 +237,13 @@ records-summary(@dsSendMail, field-names => <DataType WorkflowType Group Key Val
 # +-----------------+----------------+-----------------------------+----------------------------+----------------------------------------------------------------------------------+
 # | DataType        | WorkflowType   | Group                       | Key                        | Value                                                                            |
 # +-----------------+----------------+-----------------------------+----------------------------+----------------------------------------------------------------------------------+
-# | Questions => 48 | SendMail => 60 | All                   => 9  | ContextWordsToRemove => 12 | 0.35                                                                       => 9  |
-# | Defaults  => 7  |                | Who the email is from => 4  | TypePattern          => 12 | {_String..}                                                                => 8  |
-# | Templates => 3  |                | Who to send it to     => 4  | Parameter            => 12 | {"to", "email", "mail", "send", "it", "recipient", "addressee", "address"} => 4  |
-# | Shortcuts => 2  |                | Which email address   => 4  | Threshold            => 12 | _String                                                                    => 4  |
-# |                 |                | What it the title     => 4  | Template             => 3  | to                                                                         => 4  |
-# |                 |                | What it the body      => 4  | bodyHTML             => 1  | None                                                                       => 4  |
-# |                 |                | Which files to attach => 4  | apiKey               => 1  | {"content", "body"}                                                        => 3  |
+# | Questions => 48 | SendMail => 60 | All                   => 9  | TypePattern          => 12 | 0.35                                                                       => 9  |
+# | Defaults  => 7  |                | What it the content   => 4  | Parameter            => 12 | {_String..}                                                                => 8  |
+# | Templates => 3  |                | What it the title     => 4  | ContextWordsToRemove => 12 | _String                                                                    => 4  |
+# | Shortcuts => 2  |                | Who the email is from => 4  | Threshold            => 12 | {"to", "email", "mail", "send", "it", "recipient", "addressee", "address"} => 4  |
+# |                 |                | Which files to attach => 4  | Template             => 3  | None                                                                       => 4  |
+# |                 |                | What it the body      => 4  | attachedFiles        => 1  | to                                                                         => 4  |
+# |                 |                | What subject          => 4  | SendMail             => 1  | body                                                                       => 3  |
 # |                 |                | (Other)               => 27 | (Other)              => 7  | (Other)                                                                    => 24 |
 # +-----------------+----------------+-----------------------------+----------------------------+----------------------------------------------------------------------------------+
 ```
@@ -235,7 +255,7 @@ add-template-data(@dsSendMail);
 ```
 
 ```
-# (Shortcuts Templates ParameterTypePatterns Questions Defaults ParameterQuestions)
+# (Templates Defaults ParameterQuestions ParameterTypePatterns Questions Shortcuts)
 ```
 
 **3.** Parse natural language specification with the newly ingested and onboarded workflow ("SendMail"):
@@ -246,7 +266,7 @@ add-template-data(@dsSendMail);
 ```
 
 ```
-# SendMail[<|"To"->{"joedoe@gmail.com"},"Subject"->"this is a random real call","Body"->RandomReal[343],"AttachedFiles"->None|>]
+# SendMail[<|"To"->{"joedoe@gmail.com"},"Subject"->"this is a random real call.","Body"->RandomReal[343],"AttachedFiles"->None|>]
 ```
 
 **4.** Experiment with running the generated code!

@@ -100,6 +100,16 @@ concretize($command, template => 'RandomTabularDataset', lang => 'Raku', llm => 
 
 ------
 
+## CLI
+
+The package provides the Command Line Interface (CLI) script `concretize`. Here is usage note:
+
+```shell
+concretize --help
+```
+
+------
+
 ## How it works?
 
 The following flowchart describes how the NLP Template Engine involves a series of steps for processing a computation
