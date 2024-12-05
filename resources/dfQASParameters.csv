@@ -483,7 +483,7 @@ qrObj = (Regressionizer($*dataset)
 .echo_data_summary()
 .quantile_regression(knots = $*knots, probs = $*probs, order = $*intOrder)
 .plot(date_plot = $*dateListPlotQ)
-.errors_plot(relative_errors = $*relativeErrorsQ, date_plot = $*dateListPlotQ))"
+.error_plots(relative_errors = $*relativeErrorsQ, date_plot = $*dateListPlotQ))"
 "Templates","QRMon","R","Template","qrObj <-
 QRMonUnit($*dataset) %>%
 QRMonEchoDataSummary() %>%
