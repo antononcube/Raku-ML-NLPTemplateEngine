@@ -465,7 +465,7 @@
 "Questions","QRMon","Which regression quantiles","Threshold",0.6
 "Questions","QRMon","Which regression quantiles","Parameter","probs"
 "Questions","QRMon","Which regression quantiles","ContextWordsToRemove","{""regression quantiles""}"
-"Templates","QuantileRegression","Python","Template","""Not implemented"""
+"Templates","QuantileRegression","Python","Template","""Not implemented (use QRMon)"""
 "Templates","QuantileRegression","R","Template","""Not implemented"""
 "Templates","QuantileRegression","WL","Template","Module[{qrData,aQRFuncs,aQRPlotData},
 qrData = $*dataset;
