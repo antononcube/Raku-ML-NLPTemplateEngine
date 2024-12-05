@@ -9,7 +9,7 @@ my %*SUB-MAIN-OPTS = :named-anywhere;
 sub MAIN(
         *@words where @words > 0,                          #= Strings to be evaluated
         Str :t(:$template) = 'Whatever',                   #= Template to use.
-        Str :l(:$lang) = 'R',                              #= Template's language.
+        Str :l(:to(:$lang)) = 'R',                         #= Template's language.
         Str :c(:$clipboard-command) is copy = 'Whatever',  #= Clipboard command to use.
         *%args,                                            #= Additional arguments for &ML::FindTextualAnswer::find-textual-answer.
          ) {
