@@ -55,7 +55,8 @@ multi sub Concretize($command,
 
     my @lbls = %workflowSpecToFullName.values.unique.grep({ $_ ∉ ['Programming Environment'] });
 
-    my %args2 = { request => 'which of these workflows characterizes it' }, %args;
+    my %args2 = { request => 'which of these workflows characterizes it', llm-evaluator => %args<llm-evaluator> //
+            %args<e> // %args<finder> // Whatever }, %args;
     $template = llm-classify($command, @lbls, |%args2);
 
     if %args<echo> // False {
