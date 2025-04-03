@@ -1,14 +1,14 @@
 {
   "name": "ML::NLPTemplateEngine",
   "description": "ML::NLPTemplateEngine provides function(s) for making computational workflows.",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "perl": "6.d",
   "authors": [
     "Anton Antonov"
   ],
   "auth": "zef:antononcube",
   "depends": [
-    "ML::FindTextualAnswer:ver<0.2.4+>",
+    "ML::FindTextualAnswer:ver<0.2.7+>",
     "Data::TypeSystem:ver<0.1.2+>",
     "Hash::Merge:ver<2.0.0+>:api<2+>",
     "Text::CSV:ver<0.010+>",
