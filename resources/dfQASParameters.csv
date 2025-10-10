@@ -554,18 +554,24 @@ ClConROCPlot[$*rocPlotFuncs];"
 "Templates","RandomTabularDataset","R","Template","RandomDataFrame(nrow = $*nrow, ncol = $*ncol, columnNamesGenerator = $*columnNamesGenerator, form =  ""$*form"", maxNumberOfValues = $*maxNumberOfValues, minNumberOfValues = $*minNumberOfValues, rowNamesQ = $*rowKeys)"
 "Templates","RandomTabularDataset","Raku","Template","random-tabular-dataset($*nrow, $*ncol, ""column-names-generator"" => $*columnNamesGenerator, ""form"" => ""$*form"", ""max-number-of-values"" => $*maxNumberOfValues, ""min-number-of-values"" => $*minNumberOfValues, ""row-names"" => $*rowKeys)"
 "Templates","RandomTabularDataset","WL","Template","ResourceFunction[""RandomTabularDataset""][{$*nrow, $*ncol}, ""ColumnNamesGenerator"" -> $*columnNamesGenerator, ""Form"" -> ""$*form"", ""MaxNumberOfValues"" -> $*maxNumberOfValues, ""MinNumberOfValues"" -> $*minNumberOfValues, ""RowKeys"" -> $*rowKeys]"
-"Templates","Recommendations","Python","Template","print(""Example API -- no actual implementation !!!"")
-smrObj = SMRMonUnit()
-smrObj = SMRMonCreate( data = $*dataset)
-smrObj = SMRMonRecommendByProfile(smrObj, profile = $*prof, nrecs = $*nrecs)
-smrObj = SMRMonJoinAcross(smrObj, data = $*dataset)
-SMRMonEchoValue(smrObj)"
+"Templates","Recommendations","Python","Template","smrObj = (SparseMatrixRecommender()
+.create_from_wide_form(data = $*dataset, item_column_name='id', columns=None, add_tag_types_to_column_names=True, tag_value_separator=':')
+.apply_term_weight_functions(global_weight_func = 'IDF', local_weight_func = 'None', normalizer_func = 'Cosine')
+.recommend_by_profile(profile=$*prof, nrecs=$*nrecs)
+.join_across(data=$*dataset, on='id')
+.echo_value())"
 "Templates","Recommendations","R","Template","smrObj <-
 SMRMonUnit() %>%
 SMRMonCreate( data = $*dataset) %>%
 SMRMonRecommendByProfile( profile = $*prof, nrecs = $*nrecs) %>%
 SMRMonJoinAcross( data = $*dataset) %>%
 SMRMonEchoValue()"
+"Templates","Recommendations","Raku","Template","my $smrObj = ML::SparseMatrixRecommender.new
+.create-from-wide-form($*dataset, item-column-name='id', :add-tag-types-to-column-names, tag-value-separator=':')
+.apply-term-weight-functions('IDF', 'None', 'Cosine')
+.recommend-by-profile($*prof, $*nrecs, :!normalize)
+.join-across($*dataset)
+.echo-value();"
 "Templates","Recommendations","WL","Template","smrObj=
 SMRMonUnit[]⟹
 SMRMonCreate[$*dataset]⟹
