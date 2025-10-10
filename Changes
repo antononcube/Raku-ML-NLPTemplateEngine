@@ -1,0 +1,6 @@
+Revision history for "ML::NLPTemplateEngine"
+
+0.1.7 2025-10-10
+    - Added Python templates for recommendations.
+    - Added Raku template for recommendations.
+        - For "ML::SparseMatrixRecommender".
