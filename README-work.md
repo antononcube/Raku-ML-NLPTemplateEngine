@@ -18,6 +18,8 @@ and the WL paclet
 ["NLPTemplateEngine"](https://resources.wolframcloud.com/PacletRepository/resources/AntonAntonov/NLPTemplateEngine/), [AAp2, AAv2].
 
 An alternative, more comprehensive approach to building workflows code is given in [AAp2].
+Another alternative is to use few-shot training of LLMs with examples provided by, say,
+the Raku package ["DSL::Examples"](https://raku.land/zef:antononcube/DSL::Examples), [AAp3].
 
 ### Problem formulation
 
@@ -63,7 +65,7 @@ zef install https://github.com/antononcube/Raku-ML-NLPTemplateEngine.git
 
 Here the template is automatically determined:
 
-```perl6
+```raku
 use ML::NLPTemplateEngine;
 
 my $qrCommand = q:to/END/;
@@ -77,7 +79,7 @@ concretize($qrCommand);
 
 ### Latent Semantic Analysis (R)
 
-```perl6
+```raku
 my $lsaCommand = q:to/END/;
 Extract 20 topics from the text corpus aAbstracts using the method NNMF. 
 Show statistical thesaurus with the words neural, function, and notebook.
@@ -88,7 +90,7 @@ concretize($lsaCommand, template => 'LatentSemanticAnalysis', lang => 'R');
 
 ### Random tabular data generation (Raku)
 
-```perl6
+```raku
 my $command = q:to/END/;
 Make random table with 6 rows and 4 columns with the names <A1 B2 C3 D4>.
 END
@@ -97,6 +99,16 @@ concretize($command, template => 'RandomTabularDataset', lang => 'Raku', llm => 
 ```
 
 **Remark:** In the code above it was specified to use Google's Gemini LLM service.
+
+### Recommender workflow (Raku)
+
+```raku
+my $command = q:to/END/;
+Make a commander over the data set @dsTitanic and compute 8 recommendations for the profile (passengerSex:male, passengerClass:2nd).
+END
+
+concretize($command, lang => 'Raku');
+```
 
 ------
 
@@ -179,7 +191,7 @@ Here's a detailed narration of the process:
 
 **0.** Load the NLP-Template-Engine package (and others):
 
-```perl6
+```raku
 use ML::NLPTemplateEngine;
 use Data::Importers;
 use Data::Summarizers;
@@ -188,7 +200,7 @@ use Data::Summarizers;
 **1.** Get the "training" templates data (from CSV file you have created or changed) for a new workflow
 (["SendMail"](https://github.com/antononcube/NLP-Template-Engine/blob/main/TemplateData/dsQASParameters-SendMail.csv)):
 
-```perl6
+```raku
 my $url = 'https://raw.githubusercontent.com/antononcube/NLP-Template-Engine/main/TemplateData/dsQASParameters-SendMail.csv';
 my @dsSendMail = data-import($url, headers => 'auto');
 
@@ -197,13 +209,13 @@ records-summary(@dsSendMail, field-names => <DataType WorkflowType Group Key Val
 
 **2.** Add the ingested data for the new workflow (from the CSV file) into the NLP-Template-Engine:
 
-```perl6
+```raku
 add-template-data(@dsSendMail);
 ```
 
 **3.** Parse natural language specification with the newly ingested and onboarded workflow ("SendMail"):
 
-```perl6
+```raku
 "Send email to joedoe@gmail.com with content RandomReal[343], and the subject this is a random real call."
         ==> concretize(template => "SendMail") 
 ```
@@ -251,13 +263,18 @@ add-template-data(@dsSendMail);
 [GitHub/antononcube](https://github.com/antononcube).
 
 [AAp1] Anton Antonov,
-[NLPTemplateEngine WL paclet](https://resources.wolframcloud.com/PacletRepository/resources/AntonAntonov/NLPTemplateEngine/),
+[NLPTemplateEngine, WL paclet](https://resources.wolframcloud.com/PacletRepository/resources/AntonAntonov/NLPTemplateEngine/),
 (2023),
 [Wolfram Language Paclet Repository](https://resources.wolframcloud.com/PacletRepository/).
 
 [AAp2] Anton Antonov,
-[DSL::Translators Raku package](https://github.com/antononcube/Raku-DSL-Translators),
-(2020-2024),
+[DSL::Translators, Raku package](https://github.com/antononcube/Raku-DSL-Translators),
+(2020-2025),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[AAp3] Anton Antonov,
+[DSL::Examples, Raku package](https://github.com/antononcube/Raku-DSL-Examples),
+(2024-2025),
 [GitHub/antononcube](https://github.com/antononcube).
 
 [WRI1] Wolfram Research,

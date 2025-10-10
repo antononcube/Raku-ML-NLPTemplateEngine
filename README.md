@@ -18,6 +18,8 @@ and the WL paclet
 ["NLPTemplateEngine"](https://resources.wolframcloud.com/PacletRepository/resources/AntonAntonov/NLPTemplateEngine/), [AAp2, AAv2].
 
 An alternative, more comprehensive approach to building workflows code is given in [AAp2].
+Another alternative is to use few-shot training of LLMs with examples provided by, say,
+the Raku package ["DSL::Examples"](https://raku.land/zef:antononcube/DSL::Examples), [AAp3].
 
 ### Problem formulation
 
@@ -63,7 +65,7 @@ zef install https://github.com/antononcube/Raku-ML-NLPTemplateEngine.git
 
 Here the template is automatically determined:
 
-```perl6
+```raku
 use ML::NLPTemplateEngine;
 
 my $qrCommand = q:to/END/;
@@ -72,21 +74,20 @@ END
 
 concretize($qrCommand);
 ```
-
 ```
 # qrObj=
 # QRMonUnit[dfTempBoston]⟹
 # QRMonEchoDataSummary[]⟹
-# QRMonQuantileRegression[12, {0.4, 0.6}, InterpolationOrder->2]⟹
-# QRMonPlot["DateListPlot"->True,PlotTheme->"Detailed"]⟹
-# QRMonErrorPlots["RelativeErrors"->False,"DateListPlot"->True,PlotTheme->"Detailed"];
+# QRMonQuantileRegression[12, {0.4,0.6}, InterpolationOrder->2]⟹
+# QRMonPlot["DateListPlot"->False,PlotTheme->"Detailed"]⟹
+# QRMonErrorPlots["RelativeErrors"->False,"DateListPlot"->False,PlotTheme->"Detailed"];
 ```
 
 **Remark:** In the code above the template type, "QuantileRegression", was determined using an LLM-based classifier.
 
 ### Latent Semantic Analysis (R)
 
-```perl6
+```raku
 my $lsaCommand = q:to/END/;
 Extract 20 topics from the text corpus aAbstracts using the method NNMF. 
 Show statistical thesaurus with the words neural, function, and notebook.
@@ -94,7 +95,6 @@ END
 
 concretize($lsaCommand, template => 'LatentSemanticAnalysis', lang => 'R');
 ```
-
 ```
 # lsaObj <-
 # LSAMonUnit(aAbstracts) %>%
@@ -108,19 +108,37 @@ concretize($lsaCommand, template => 'LatentSemanticAnalysis', lang => 'R');
 
 ### Random tabular data generation (Raku)
 
-```perl6
+```raku
 my $command = q:to/END/;
 Make random table with 6 rows and 4 columns with the names <A1 B2 C3 D4>.
 END
 
 concretize($command, template => 'RandomTabularDataset', lang => 'Raku', llm => 'gemini');
 ```
-
 ```
-# random-tabular-dataset(6, 4, "column-names-generator" => <A1 B2 C3 D4>, "form" => "Table", "max-number-of-values" => 24, "min-number-of-values" => 24, "row-names" => False)
+# random-tabular-dataset(6, 4, "column-names-generator" => <A1 B2 C3 D4>, "form" => "table", "max-number-of-values" => 24, "min-number-of-values" => 24, "row-names" => False)
 ```
 
 **Remark:** In the code above it was specified to use Google's Gemini LLM service.
+
+### Recommender workflow (Raku)
+
+```raku
+my $command = q:to/END/;
+Make a commander over the data set @dsTitanic and compute 8 recommendations for the profile (passengerSex:male, passengerClass:2nd).
+END
+
+concretize($command, lang => 'Raku');
+```
+
+```
+# my $smrObj = ML::SparseMatrixRecommender.new
+# .create-from-wide-form(@dsTitanic, item-column-name='id', :add-tag-types-to-column-names, tag-value-separator=':')
+# .apply-term-weight-functions('IDF', 'None', 'Cosine')
+# .recommend-by-profile(["passengerSex:male", "passengerClass:2nd"], 8, :!normalize)
+# .join-across(@dsTitanic)
+# .echo-value();
+```
 
 ------
 
@@ -131,7 +149,6 @@ The package provides the Command Line Interface (CLI) script `concretize`. Here 
 ```shell
 concretize --help
 ```
-
 ```
 # Usage:
 #   concretize [<words> ...] [-t|--template=<Str>] [-l|--to|--lang=<Str>] [-c|--clipboard-command=<Str>] [--<args>=...]
@@ -213,12 +230,11 @@ Here's a detailed narration of the process:
 
 **0.** Load the NLP-Template-Engine package (and others):
 
-```perl6
+```raku
 use ML::NLPTemplateEngine;
 use Data::Importers;
 use Data::Summarizers;
 ```
-
 ```
 # (Any)
 ```
@@ -226,47 +242,44 @@ use Data::Summarizers;
 **1.** Get the "training" templates data (from CSV file you have created or changed) for a new workflow
 (["SendMail"](https://github.com/antononcube/NLP-Template-Engine/blob/main/TemplateData/dsQASParameters-SendMail.csv)):
 
-```perl6
+```raku
 my $url = 'https://raw.githubusercontent.com/antononcube/NLP-Template-Engine/main/TemplateData/dsQASParameters-SendMail.csv';
 my @dsSendMail = data-import($url, headers => 'auto');
 
 records-summary(@dsSendMail, field-names => <DataType WorkflowType Group Key Value>);
 ```
-
 ```
-# +-----------------+----------------+-----------------------------+----------------------------+----------------------------------------------------------------------------------+
-# | DataType        | WorkflowType   | Group                       | Key                        | Value                                                                            |
-# +-----------------+----------------+-----------------------------+----------------------------+----------------------------------------------------------------------------------+
-# | Questions => 48 | SendMail => 60 | All                   => 9  | TypePattern          => 12 | 0.35                                                                       => 9  |
-# | Defaults  => 7  |                | What it the content   => 4  | Parameter            => 12 | {_String..}                                                                => 8  |
-# | Templates => 3  |                | What it the title     => 4  | ContextWordsToRemove => 12 | _String                                                                    => 4  |
-# | Shortcuts => 2  |                | Who the email is from => 4  | Threshold            => 12 | {"to", "email", "mail", "send", "it", "recipient", "addressee", "address"} => 4  |
-# |                 |                | Which files to attach => 4  | Template             => 3  | None                                                                       => 4  |
-# |                 |                | What it the body      => 4  | attachedFiles        => 1  | to                                                                         => 4  |
-# |                 |                | What subject          => 4  | SendMail             => 1  | body                                                                       => 3  |
-# |                 |                | (Other)               => 27 | (Other)              => 7  | (Other)                                                                    => 24 |
-# +-----------------+----------------+-----------------------------+----------------------------+----------------------------------------------------------------------------------+
+# +-----------------+----------------+---------------------------+----------------------------+----------------------------------------------------------------------------------+
+# | DataType        | WorkflowType   | Group                     | Key                        | Value                                                                            |
+# +-----------------+----------------+---------------------------+----------------------------+----------------------------------------------------------------------------------+
+# | Questions => 48 | SendMail => 60 | All                 => 9  | TypePattern          => 12 | 0.35                                                                       => 9  |
+# | Defaults  => 7  |                | Which api key       => 4  | Parameter            => 12 | {_String..}                                                                => 8  |
+# | Templates => 3  |                | What subject        => 4  | Threshold            => 12 | {"to", "email", "mail", "send", "it", "recipient", "addressee", "address"} => 4  |
+# | Shortcuts => 2  |                | Which email address => 4  | ContextWordsToRemove => 12 | None                                                                       => 4  |
+# |                 |                | Who is it from      => 4  | Template             => 3  | to                                                                         => 4  |
+# |                 |                | Who is the receiver => 4  | body                 => 1  | _String                                                                    => 4  |
+# |                 |                | Who to send it to   => 4  | Emailing             => 1  | {"content", "body"}                                                        => 3  |
+# |                 |                | (Other)             => 27 | (Other)              => 7  | (Other)                                                                    => 24 |
+# +-----------------+----------------+---------------------------+----------------------------+----------------------------------------------------------------------------------+
 ```
 
 **2.** Add the ingested data for the new workflow (from the CSV file) into the NLP-Template-Engine:
 
-```perl6
+```raku
 add-template-data(@dsSendMail);
 ```
-
 ```
-# (Templates Defaults ParameterQuestions ParameterTypePatterns Questions Shortcuts)
+# (Questions Shortcuts ParameterQuestions Templates Defaults ParameterTypePatterns)
 ```
 
 **3.** Parse natural language specification with the newly ingested and onboarded workflow ("SendMail"):
 
-```perl6
+```raku
 "Send email to joedoe@gmail.com with content RandomReal[343], and the subject this is a random real call."
         ==> concretize(template => "SendMail") 
 ```
-
 ```
-# SendMail[<|"To"->{"joedoe@gmail.com"},"Subject"->"this is a random real call.","Body"->RandomReal[343],"AttachedFiles"->None|>]
+# SendMail[<|"To"->{"joedoe@gmail.com"},"Subject"->"this is a random real call","Body"->{"None"},"AttachedFiles"->None|>]
 ```
 
 **4.** Experiment with running the generated code!
@@ -312,13 +325,18 @@ add-template-data(@dsSendMail);
 [GitHub/antononcube](https://github.com/antononcube).
 
 [AAp1] Anton Antonov,
-[NLPTemplateEngine WL paclet](https://resources.wolframcloud.com/PacletRepository/resources/AntonAntonov/NLPTemplateEngine/),
+[NLPTemplateEngine, WL paclet](https://resources.wolframcloud.com/PacletRepository/resources/AntonAntonov/NLPTemplateEngine/),
 (2023),
 [Wolfram Language Paclet Repository](https://resources.wolframcloud.com/PacletRepository/).
 
 [AAp2] Anton Antonov,
-[DSL::Translators Raku package](https://github.com/antononcube/Raku-DSL-Translators),
-(2020-2024),
+[DSL::Translators, Raku package](https://github.com/antononcube/Raku-DSL-Translators),
+(2020-2025),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[AAp3] Anton Antonov,
+[DSL::Examples, Raku package](https://github.com/antononcube/Raku-DSL-Examples),
+(2024-2025),
 [GitHub/antononcube](https://github.com/antononcube).
 
 [WRI1] Wolfram Research,
