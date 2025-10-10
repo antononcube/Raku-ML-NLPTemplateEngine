@@ -1,49 +1,47 @@
 {
-  "name": "ML::NLPTemplateEngine",
-  "description": "ML::NLPTemplateEngine provides function(s) for making computational workflows.",
-  "version": "0.1.6",
-  "perl": "6.d",
-  "authors": [
-    "Anton Antonov"
-  ],
-  "auth": "zef:antononcube",
-  "depends": [
-    "ML::FindTextualAnswer:ver<0.2.7+>",
-    "Data::TypeSystem:ver<0.1.2+>",
-    "Hash::Merge:ver<2.0.0+>:api<2+>",
-    "Text::CSV:ver<0.010+>",
-    "Hash::Merge:ver<2.0.0+>:api<2+>",
-    "Clipboard:ver<0.1.2>"
-  ],
-  "build-depends": [],
-  "test-depends": [],
-  "provides": {
-    "ML::NLPTemplateEngine": "lib/ML/NLPTemplateEngine.rakumod",
-    "ML::NLPTemplateEngine::Core": "lib/ML/NLPTemplateEngine/Core.rakumod",
-    "ML::NLPTemplateEngine::Ingestion": "lib/ML/NLPTemplateEngine/Ingestion.rakumod"
-  },
-  "resources": [
-    "dfQASParameters.csv"
-  ],
-  "license": "Artistic-2.0",
-  "tags": [
-    "ai",
-    "api",
-    "art",
-    "chat-gpt",
-    "chatgpt",
-    "generative art",
-    "generative",
-    "machine learning",
-    "ml",
-    "openai",
-    "palm",
-    "qas",
-    "question answering",
-    "question answering system",
-    "web service",
-    "web"
-  ],
-  "api": "1",
-  "source-url": "https://github.com/antononcube/Raku-ML-NLPTemplateEngine"
+    "name": "ML::NLPTemplateEngine",
+    "description": "ML::NLPTemplateEngine provides function(s) for making computational workflows.",
+    "version": "0.1.7",
+    "authors": [
+        "Anton Antonov"
+    ],
+    "auth": "zef:antononcube",
+    "depends": [
+        "ML::FindTextualAnswer:ver<0.2.7+>",
+        "Data::TypeSystem:ver<0.1.2+>",
+        "Hash::Merge:ver<2.0.0+>:api<2+>",
+        "Text::CSV:ver<0.010+>",
+        "Hash::Merge:ver<2.0.0+>:api<2+>",
+        "Clipboard:ver<0.1.2>"
+    ],
+    "build-depends": [],
+    "provides": {
+        "ML::NLPTemplateEngine": "lib/ML/NLPTemplateEngine.rakumod",
+        "ML::NLPTemplateEngine::Core": "lib/ML/NLPTemplateEngine/Core.rakumod",
+        "ML::NLPTemplateEngine::Ingestion": "lib/ML/NLPTemplateEngine/Ingestion.rakumod"
+    },
+    "resources": [
+        "dfQASParameters.csv"
+    ],
+    "license": "Artistic-2.0",
+    "tags": [
+        "ai",
+        "api",
+        "art",
+        "chat-gpt",
+        "chatgpt",
+        "generative art",
+        "generative",
+        "machine learning",
+        "ml",
+        "openai",
+        "palm",
+        "qas",
+        "question answering",
+        "question answering system",
+        "web service",
+        "web"
+    ],
+    "api": "1",
+    "source-url": "https://github.com/antononcube/Raku-ML-NLPTemplateEngine"
 }
