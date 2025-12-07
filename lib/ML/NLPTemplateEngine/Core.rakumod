@@ -128,6 +128,7 @@ multi sub Concretize($command,
     #------------------------------------------------------
 
     my %args2 = %args.grep({ $_.key ∉ <pairs p> });
+    %args2 = { finder => %args<finder> // %args<llm-evaluator> // %args<e> // Whatever }, %args;
     my $ans = find-textual-answer($command, @questions2, |%args2):pairs;
 
     note (find-textual-answer => $ans.raku) if $echo;
