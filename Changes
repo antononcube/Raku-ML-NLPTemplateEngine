@@ -1,5 +1,7 @@
 Revision history for "ML::NLPTemplateEngine"
 
+0.1.8 2025-12-07
+    - Bug fix (or a new feature): &concretize respects the option names "finder", "llm-evaluator", and "e" as being the same.
 0.1.7 2025-10-10
     - Added Python templates for recommendations.
     - Added Raku template for recommendations.
