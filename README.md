@@ -74,6 +74,7 @@ END
 
 concretize($qrCommand);
 ```
+
 ```
 # qrObj=
 # QRMonUnit[dfTempBoston]⟹
@@ -95,6 +96,7 @@ END
 
 concretize($lsaCommand, template => 'LatentSemanticAnalysis', lang => 'R');
 ```
+
 ```
 # lsaObj <-
 # LSAMonUnit(aAbstracts) %>%
@@ -113,8 +115,9 @@ my $command = q:to/END/;
 Make random table with 6 rows and 4 columns with the names <A1 B2 C3 D4>.
 END
 
-concretize($command, template => 'RandomTabularDataset', lang => 'Raku', llm => 'gemini');
+concretize($command, template => 'RandomTabularDataset', lang => 'Raku', llm => 'ollama');
 ```
+
 ```
 # random-tabular-dataset(6, 4, "column-names-generator" => <A1 B2 C3 D4>, "form" => "table", "max-number-of-values" => 24, "min-number-of-values" => 24, "row-names" => False)
 ```
@@ -149,9 +152,10 @@ The package provides the Command Line Interface (CLI) script `concretize`. Here 
 ```shell
 concretize --help
 ```
+
 ```
 # Usage:
-#   concretize [<words> ...] [-t|--template=<Str>] [-l|--to|--lang=<Str>] [-c|--clipboard-command=<Str>] [--<args>=...]
+#   concretize.raku [<words> ...] [-t|--template=<Str>] [-l|--to|--lang=<Str>] [-c|--clipboard-command=<Str>] [--<args>=...]
 #   
 #     -t|--template=<Str>             Template to use. [default: 'Whatever']
 #     -l|--to|--lang=<Str>            Template's language. [default: 'R']
@@ -235,9 +239,6 @@ use ML::NLPTemplateEngine;
 use Data::Importers;
 use Data::Summarizers;
 ```
-```
-# (Any)
-```
 
 **1.** Get the "training" templates data (from CSV file you have created or changed) for a new workflow
 (["SendMail"](https://github.com/antononcube/NLP-Template-Engine/blob/main/TemplateData/dsQASParameters-SendMail.csv)):
@@ -248,19 +249,20 @@ my @dsSendMail = data-import($url, headers => 'auto');
 
 records-summary(@dsSendMail, field-names => <DataType WorkflowType Group Key Value>);
 ```
+
 ```
-# +-----------------+----------------+---------------------------+----------------------------+----------------------------------------------------------------------------------+
-# | DataType        | WorkflowType   | Group                     | Key                        | Value                                                                            |
-# +-----------------+----------------+---------------------------+----------------------------+----------------------------------------------------------------------------------+
-# | Questions => 48 | SendMail => 60 | All                 => 9  | TypePattern          => 12 | 0.35                                                                       => 9  |
-# | Defaults  => 7  |                | Which api key       => 4  | Parameter            => 12 | {_String..}                                                                => 8  |
-# | Templates => 3  |                | What subject        => 4  | Threshold            => 12 | {"to", "email", "mail", "send", "it", "recipient", "addressee", "address"} => 4  |
-# | Shortcuts => 2  |                | Which email address => 4  | ContextWordsToRemove => 12 | None                                                                       => 4  |
-# |                 |                | Who is it from      => 4  | Template             => 3  | to                                                                         => 4  |
-# |                 |                | Who is the receiver => 4  | body                 => 1  | _String                                                                    => 4  |
-# |                 |                | Who to send it to   => 4  | Emailing             => 1  | {"content", "body"}                                                        => 3  |
-# |                 |                | (Other)             => 27 | (Other)              => 7  | (Other)                                                                    => 24 |
-# +-----------------+----------------+---------------------------+----------------------------+----------------------------------------------------------------------------------+
+# +-----------------+----------------+--------------------------------+----------------------------+----------------------------------------------------------------------------------+
+# | DataType        | WorkflowType   | Group                          | Key                        | Value                                                                            |
+# +-----------------+----------------+--------------------------------+----------------------------+----------------------------------------------------------------------------------+
+# | Questions => 48 | SendMail => 60 | All                      => 9  | Threshold            => 12 | 0.35                                                                       => 9  |
+# | Defaults  => 7  |                | What it the body         => 4  | Parameter            => 12 | {_String..}                                                                => 8  |
+# | Templates => 3  |                | Which email address      => 4  | TypePattern          => 12 | None                                                                       => 4  |
+# | Shortcuts => 2  |                | What it the title        => 4  | ContextWordsToRemove => 12 | {"to", "email", "mail", "send", "it", "recipient", "addressee", "address"} => 4  |
+# |                 |                | Who to send it to        => 4  | Template             => 3  | to                                                                         => 4  |
+# |                 |                | Who to send the email to => 4  | apiKey               => 1  | _String                                                                    => 4  |
+# |                 |                | What it the content      => 4  | to                   => 1  | body                                                                       => 3  |
+# |                 |                | (Other)                  => 27 | (Other)              => 7  | (Other)                                                                    => 24 |
+# +-----------------+----------------+--------------------------------+----------------------------+----------------------------------------------------------------------------------+
 ```
 
 **2.** Add the ingested data for the new workflow (from the CSV file) into the NLP-Template-Engine:
@@ -268,8 +270,9 @@ records-summary(@dsSendMail, field-names => <DataType WorkflowType Group Key Val
 ```raku
 add-template-data(@dsSendMail);
 ```
+
 ```
-# (Questions Shortcuts ParameterQuestions Templates Defaults ParameterTypePatterns)
+# (ParameterTypePatterns Defaults ParameterQuestions Questions Shortcuts Templates)
 ```
 
 **3.** Parse natural language specification with the newly ingested and onboarded workflow ("SendMail"):
@@ -278,8 +281,9 @@ add-template-data(@dsSendMail);
 "Send email to joedoe@gmail.com with content RandomReal[343], and the subject this is a random real call."
         ==> concretize(template => "SendMail") 
 ```
+
 ```
-# SendMail[<|"To"->{"joedoe@gmail.com"},"Subject"->"this is a random real call","Body"->{"None"},"AttachedFiles"->None|>]
+# SendMail[<|"To"->{"joedoe@gmail.com"},"Subject"->"this is a random real call","Body"->RandomReal[343],"AttachedFiles"->None|>]
 ```
 
 **4.** Experiment with running the generated code!
@@ -288,24 +292,24 @@ add-template-data(@dsSendMail);
 
 ## TODO
 
-- [ ] Templates data
-    - [ ] Using JSON instead of CSV format for the templates
-        - [ ] Derive suitable data structure
-        - [ ] Implement export to JSON
-        - [ ] Implement ingestion
-    - [ ] Review wrong parameter type specifications
+- [ ] TODO Templates data
+    - [ ] TODO Using JSON instead of CSV format for the templates
+        - [ ] TODO Derive suitable data structure
+        - [ ] TODO Implement export to JSON
+        - [ ] TODO Implement ingestion
+    - [ ] TODO Review wrong parameter type specifications
         - A few were found.
-    - [ ] New workflows
-        - [ ] LLM-workflows
-        - [ ] Clustering
-        - [ ] Associative rule learning
-- [ ] Unit tests
+    - [ ] TODO New workflows
+        - [ ] TODO LLM-workflows
+        - [ ] TODO Clustering
+        - [ ] TODO Associative rule learning
+- [ ] TODO Unit tests
     - What are good ./t unit tests?
-    - [ ] Make ingestion ./t unit tests
-    - [ ] Make suitable ./xt unit tests
-- [ ] Documentation
-    - [ ] Comparison with LLM code generation using few-shot examples
-    - [ ] Video demonstrating the functionalities
+    - [ ] TODO Make ingestion ./t unit tests
+    - [ ] TODO Make suitable ./xt unit tests
+- [ ] TODO Documentation
+    - [ ] TODO Comparison with LLM code generation using few-shot examples
+    - [ ] TODO Video demonstrating the functionalities
 
 ------
 

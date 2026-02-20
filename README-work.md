@@ -95,7 +95,7 @@ my $command = q:to/END/;
 Make random table with 6 rows and 4 columns with the names <A1 B2 C3 D4>.
 END
 
-concretize($command, template => 'RandomTabularDataset', lang => 'Raku', llm => 'gemini');
+concretize($command, template => 'RandomTabularDataset', lang => 'Raku', llm => 'ollama');
 ```
 
 **Remark:** In the code above it was specified to use Google's Gemini LLM service.
@@ -226,24 +226,24 @@ add-template-data(@dsSendMail);
 
 ## TODO
 
-- [ ] Templates data
-    - [ ] Using JSON instead of CSV format for the templates
-        - [ ] Derive suitable data structure
-        - [ ] Implement export to JSON
-        - [ ] Implement ingestion
-    - [ ] Review wrong parameter type specifications
+- [ ] TODO Templates data
+    - [ ] TODO Using JSON instead of CSV format for the templates
+        - [ ] TODO Derive suitable data structure
+        - [ ] TODO Implement export to JSON
+        - [ ] TODO Implement ingestion
+    - [ ] TODO Review wrong parameter type specifications
         - A few were found.
-    - [ ] New workflows
-        - [ ] LLM-workflows
-        - [ ] Clustering
-        - [ ] Associative rule learning
-- [ ] Unit tests
+    - [ ] TODO New workflows
+        - [ ] TODO LLM-workflows
+        - [ ] TODO Clustering
+        - [ ] TODO Associative rule learning
+- [ ] TODO Unit tests
     - What are good ./t unit tests?
-    - [ ] Make ingestion ./t unit tests
-    - [ ] Make suitable ./xt unit tests
-- [ ] Documentation
-    - [ ] Comparison with LLM code generation using few-shot examples
-    - [ ] Video demonstrating the functionalities
+    - [ ] TODO Make ingestion ./t unit tests
+    - [ ] TODO Make suitable ./xt unit tests
+- [ ] TODO Documentation
+    - [ ] TODO Comparison with LLM code generation using few-shot examples
+    - [ ] TODO Video demonstrating the functionalities
 
 ------
 
