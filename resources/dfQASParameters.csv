@@ -531,7 +531,7 @@ LSAMonEchoStatisticalThesaurus(words = $*statThesaurusWords)"
 .echo-topics-interpretation(number-of-terms=>$*topicsTableNumberOfTerms, wide-form=>True)
 .echo-statistical-thesaurus(terms=>$*statThesaurusWords,
 						  wide-form=>True,
-						  number_of_nearest_neighbors=>12,
+						  number-of-nearest-neighbors=>12,
 						  method=>""cosine"",
 						  echo-function=>&put)"
 "Templates","LatentSemanticAnalysis","WL","Template","lsaObj=
