@@ -527,7 +527,7 @@ LSAMonEchoStatisticalThesaurus(words = $*statThesaurusWords)"
 .apply-term-weight-functions(global-weight-func=>""$*globalWeightFunction"",
 						   local-weight-func=>""$*localWeightFunction"",
 						   normalizer-func=>""$*normalizerFunction"")
-.extract-topics(number_of_topics=>$*numberOfTopics, min-number-of-documents-per-term=>$*minNumberOfDocumentsPerTerm, method=>""$*method"", max-steps=>$*maxSteps)
+.extract-topics(number-of-topics=>$*numberOfTopics, min-number-of-documents-per-term=>$*minNumberOfDocumentsPerTerm, method=>""$*method"", max-steps=>$*maxSteps)
 .echo-topics-interpretation(number-of-terms=>$*topicsTableNumberOfTerms, wide-form=>True)
 .echo-statistical-thesaurus(terms=>$*statThesaurusWords,
 						  wide-form=>True,
