@@ -1,11 +1,11 @@
 #!/usr/bin/env raku
 use v6.d;
 
+#use lib <. lib>;
 use ML::NLPTemplateEngine;
-
 my $lang = 'WL';
-my $llm = 'gemini';
-my $model = 'gemini-2.0-flash';
+my $llm = 'ollama';
+my $model = 'gemma4:26b';
 
 my @commands = [
     'Make a classifier with the method RandomForest over the data dfTitanic; show precision and accuracy; plot True Positive Rate vs Positive Predictive Value.',
