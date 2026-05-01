@@ -121,6 +121,9 @@
 "Questions","LatentSemanticAnalysis","Apply stemming","TypePattern","_?BooleanQ"
 "Questions","LatentSemanticAnalysis","Apply stemming","Threshold",0.75
 "Questions","LatentSemanticAnalysis","Apply stemming","Parameter","stemmingRules"
+"Questions","LatentSemanticAnalysis","Delete stop words","TypePattern","_?BooleanQ"
+"Questions","LatentSemanticAnalysis","Delete stop words","Threshold",0.75
+"Questions","LatentSemanticAnalysis","Delete stop words","Parameter","stopWords"
 "Questions","LatentSemanticAnalysis","How many topics","TypePattern","_Integer"
 "Questions","LatentSemanticAnalysis","How many topics","Threshold",0.45
 "Questions","LatentSemanticAnalysis","How many topics","Parameter","numberOfTopics"
