@@ -519,6 +519,21 @@ LSAMonApplyTermWeightFunctions(globalWeightFunction = ""$*globalWeightFunction""
 LSAMonExtractTopics(numberOfTopics = $*numberOfTopics, method = ""$*method"", maxSteps = $*maxSteps, minNumberOfDocumentsPerTerm = $*minNumberOfDocumentsPerTerm) %>%
 LSAMonEchoTopicsTable(numberOfTerms = $*topicsTableNumberOfTerms, wideFormQ = TRUE) %>%
 LSAMonEchoStatisticalThesaurus(words = $*statThesaurusWords)"
+"Templates","LatentSemanticAnalysis","Raku","Template","my $lsaObj = LatentSemanticAnalyzer.new
+.make-document-term-matrix(docs=>$*textData,
+                           stop-words=>$*stopWords,
+                           stemming-rules=>$*stemmingRules,
+                           min-length=>3)
+.apply-term-weight-functions(global-weight-func=>""$*globalWeightFunction"",
+						   local-weight-func=>""$*localWeightFunction"",
+						   normalizer-func=>""$*normalizerFunction"")
+.extract-topics(number_of_topics=>$*numberOfTopics, min-number-of-documents-per-term=>$*minNumberOfDocumentsPerTerm, method=>""$*method"", max-steps=>$*maxSteps)
+.echo-topics-interpretation(number-of-terms=>$*topicsTableNumberOfTerms, wide-form=>True)
+.echo-statistical-thesaurus(terms=>$*statThesaurusWords),
+						  wide-form=>True,
+						  number_of_nearest_neighbors=>12,
+						  method=>""cosine"",
+						  echo-function=>&put)"
 "Templates","LatentSemanticAnalysis","WL","Template","lsaObj=
 LSAMonUnit[$*textData] ⟹
 LSAMonMakeDocumentTermMatrix[ ""StemmingRules"" -> $*stemmingRules, ""StopWords"" -> $*stopWords] ⟹
