@@ -193,9 +193,9 @@ multi sub Concretize($command,
 
             my $ans2 = do given %paramTypePatterns{$param} {
                 when $_ ∈ <_?BooleanQ Bool> {
-                    given $ans.lc {
+                    given $ans.lc.trim {
                         when $_ ∈ <false n/a no none null> { %syntax<False> }
-                        when $_ ∈ <automatic auto whatever> { $ans }
+                        when $_ ∈ <automatic auto whatever> { %syntax<Automatic> }
                         default { %syntax<True> }
                     }
                 }
