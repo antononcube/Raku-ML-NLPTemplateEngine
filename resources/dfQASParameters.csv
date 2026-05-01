@@ -529,7 +529,7 @@ LSAMonEchoStatisticalThesaurus(words = $*statThesaurusWords)"
 						   normalizer-func=>""$*normalizerFunction"")
 .extract-topics(number_of_topics=>$*numberOfTopics, min-number-of-documents-per-term=>$*minNumberOfDocumentsPerTerm, method=>""$*method"", max-steps=>$*maxSteps)
 .echo-topics-interpretation(number-of-terms=>$*topicsTableNumberOfTerms, wide-form=>True)
-.echo-statistical-thesaurus(terms=>$*statThesaurusWords),
+.echo-statistical-thesaurus(terms=>$*statThesaurusWords,
 						  wide-form=>True,
 						  number_of_nearest_neighbors=>12,
 						  method=>""cosine"",
