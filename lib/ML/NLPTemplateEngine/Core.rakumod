@@ -84,7 +84,7 @@ multi sub Concretize($command,
 
 multi sub Concretize($command,
                      Str:D :$template!,
-                     Str:D :$lang = 'WL',
+                     Str:D :to(:target-language(:$lang)) = 'WL',
                      Bool:D :$avoid-monads = False,
                      :$format is copy = 'hash',
                      :$user-id = '',
