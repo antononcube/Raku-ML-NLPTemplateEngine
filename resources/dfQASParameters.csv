@@ -519,7 +519,7 @@ LSAMonApplyTermWeightFunctions(globalWeightFunction = ""$*globalWeightFunction""
 LSAMonExtractTopics(numberOfTopics = $*numberOfTopics, method = ""$*method"", maxSteps = $*maxSteps, minNumberOfDocumentsPerTerm = $*minNumberOfDocumentsPerTerm) %>%
 LSAMonEchoTopicsTable(numberOfTerms = $*topicsTableNumberOfTerms, wideFormQ = TRUE) %>%
 LSAMonEchoStatisticalThesaurus(words = $*statThesaurusWords)"
-"Templates","LatentSemanticAnalysis","Raku","Template","my $lsaObj = LatentSemanticAnalyzer.new
+"Templates","LatentSemanticAnalysis","Raku","Template","my $lsaObj = ML::LatentSemanticAnalyzer.new
 .make-document-term-matrix(docs=>$*textData,
                            stop-words=>$*stopWords,
                            stemming-rules=>$*stemmingRules,
