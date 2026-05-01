@@ -3,6 +3,8 @@ Revision history for "ML::NLPTemplateEngine"
 0.1.9 2026-05-01
     - Added template for Raku LSAMon workflow.
         - For the (new) package "ML::LatentSemanticAnalyzer".
+    - Added the synonyms "target-language" and "to" for the parameter :$lang of &concretize.
+    - Fix: correct handling of boolean parameter answers with value "Automatic".
 
 0.1.8 2025-12-07
     - Bug fix (or a new feature): &concretize respects the option names "finder", "llm-evaluator", and "e" as being the same.
